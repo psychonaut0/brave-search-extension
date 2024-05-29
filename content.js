@@ -1,22 +1,21 @@
 function replaceBraveLogoToGoogleLogo() {
-  const braveLogo = document.getElementById("logo");
-  if (braveLogo) {
-    braveLogo.childNodes.forEach((child) => {
-      if (child.tagName === "IMG") {
-        child.src =
-          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png";
-        child.style.height = "80px";
-      }
-    });
-  }
-  const braveNavLogo = document.getElementsByClassName("nav-logo")[0];
-  if (braveNavLogo) {
-    braveNavLogo.childNodes.forEach((child) => {
-      if (child.tagName === "IMG")
-        child.src =
-          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png";
-    });
-  }
+  const braveLogo = document.querySelectorAll("#logo img");
+  braveLogo.forEach((logo) => {
+    if (logo) {
+      logo.src =
+        "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png";
+      logo.style.height = "80px";
+    }
+  });
+
+  const braveNavLogo = document.querySelectorAll(".nav-logo img");
+
+  braveNavLogo.forEach((logo) => {
+    if (logo) {
+      logo.src =
+        "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png";
+    }
+  });
 }
 
 function replaceFavicon() {
@@ -117,9 +116,9 @@ function changeTitle() {
 }
 
 function editSnippetDescription() {
-  const searchResults = document.getElementsByClassName("snippet-description");
+  const searchResults = document.querySelectorAll(".snippet-description");
 
-  Array.from(searchResults).forEach((result) => {
+  searchResults.forEach((result) => {
     if (result.childNodes[0].nodeType === Node.TEXT_NODE) {
       const span = document.createElement("span");
       span.style.opacity = "0.7";
@@ -135,30 +134,24 @@ function editSnippetDescription() {
 }
 
 function removeElementByClassName(className) {
-  const element = document.getElementsByClassName(className)[0];
+  const element = document.querySelector(`.${className}`);
   if (element) {
     element.remove();
   }
 }
 
 function removeFooter() {
-  const footer = document.getElementsByTagName("footer")[0];
+  const footer = document.querySelector("footer");
   if (footer) {
     footer.remove();
   }
 }
 
 function removeBorderFromSearchResults() {
-  const searchResults = document.getElementsByClassName("snippet");
-  Array.from(searchResults)
-    .filter((result) =>
-      ["web", "video", "image", "news", "shopping", "book"].includes(
-        result.getAttribute("data-type")
-      )
-    )
-    .forEach((result) => {
-      result.style.border = "1px solid transparent";
-    });
+  const searchResults = document.querySelectorAll(".snippet[data-type]");
+  searchResults.forEach((result) => {
+    result.style.border = "1px solid transparent";
+  });
 }
 
 function removeWaves() {
@@ -191,11 +184,10 @@ function addMailButton() {
     const mailButton = document.createElement("a");
     mailButton.className = "mail-button";
     mailButton.href = "https://mail.google.com";
-    mailButton.textContent = "Contact Us";
-    mailButton.style.color = "white";
+    mailButton.textContent = "Gmail";
+    mailButton.style.color = "#dadfe1";
     mailButton.style.textDecoration = "none";
     mailButton.style.marginLeft = "10px";
-    mailButton.style.fontWeight = "bold";
     settingsDiv.insertBefore(mailButton, settingsDiv.firstChild);
   }
 }
@@ -206,28 +198,25 @@ function observeDOMChanges() {
   let timeout;
 
   const callback = (mutationsList) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      const operations = [
-        removeElementByClassName.bind(null, "subutton-wrapper"),
-        removeFooter,
-        replaceBraveLogoToGoogleLogo,
-        removeBorderFromSearchResults,
-        removeElementByClassName.bind(null, "llm suggestion"),
-        replaceFavicon,
-        changeTitle,
-        editSnippetDescription,
-        removeWaves,
-        moveVideoThumbnail,
-        addMailButton,
-      ];
+    const operations = [
+      removeElementByClassName.bind(null, "subutton-wrapper"),
+      removeFooter,
+      replaceBraveLogoToGoogleLogo,
+      removeBorderFromSearchResults,
+      removeElementByClassName.bind(null, "llm suggestion"),
+      replaceFavicon,
+      changeTitle,
+      editSnippetDescription,
+      removeWaves,
+      moveVideoThumbnail,
+      addMailButton,
+    ];
 
-      for (let mutation of mutationsList) {
-        if (mutation.type === "childList") {
-          operations.forEach((operation) => operation());
-        }
+    for (let mutation of mutationsList) {
+      if (mutation.type === "childList") {
+        operations.forEach((operation) => operation());
       }
-    }, 100); // Adjust the delay as needed
+    }
   };
 
   const observer = new MutationObserver(callback);
