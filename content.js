@@ -20,7 +20,6 @@ function replaceBraveLogoToGoogleLogo() {
 }
 
 function replaceFavicon() {
-  // Remove all favicons
   const favicons = document.querySelectorAll('link[rel="icon"]');
   favicons.forEach((favicon) => favicon.remove());
 
@@ -32,13 +31,12 @@ function replaceFavicon() {
 }
 
 function addPlayIconToAnchor(anchorElement) {
-  // Create the overlay div
   const overlayDiv = document.createElement("div");
   overlayDiv.style.position = "absolute";
   overlayDiv.style.width = "111px";
   overlayDiv.style.height = "82px";
-  overlayDiv.style.pointerEvents = "none"; // Ensure it doesn't interfere with click events
-  overlayDiv.style.zIndex = "10"; // Ensure it's on top of the image
+  overlayDiv.style.pointerEvents = "none";
+  overlayDiv.style.zIndex = "10";
   overlayDiv.style.marginBlockStart = "6px";
   overlayDiv.style.marginInlineStart = "-125px";
   overlayDiv.style.display = "flex";
@@ -46,7 +44,6 @@ function addPlayIconToAnchor(anchorElement) {
   overlayDiv.style.alignItems = "center";
   overlayDiv.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
 
-  // Create the play icon (using SVG for scalability)
   const playIcon = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "svg"
@@ -68,11 +65,7 @@ function addPlayIconToAnchor(anchorElement) {
 
   playIcon.appendChild(playPath);
   overlayDiv.appendChild(playIcon);
-
-  // Ensure the anchor element is positioned relatively
   anchorElement.style.position = "relative";
-
-  // Add the overlay to the anchor element
   anchorElement.appendChild(overlayDiv);
 }
 
@@ -94,10 +87,8 @@ function moveVideoThumbnail() {
           anchorImg.src = videoThumbSrc;
         };
 
-        // Set the initial src
         updateImageSrc();
 
-        // Observe changes to the src attribute of the anchor image
         const observer = new MutationObserver(() => {
           if (anchorImg.src !== videoThumbSrc) {
             updateImageSrc();
@@ -110,12 +101,8 @@ function moveVideoThumbnail() {
         });
 
         addPlayIconToAnchor(anchorElement);
-        //Add border radius to the anchor image
         anchorImg.style.borderRadius = "8px";
-        // Edit border color
         anchorImg.style.border = "1px solid #21272a";
-
-        // Remove the video thumbnail element
         videoThumbElement.remove();
       }
     }
@@ -197,49 +184,50 @@ function replaceCSSColorVariables() {
   document.head.appendChild(style);
 }
 
-// function addMailButton() {
-//   // Add a mail button to div with class "settings" and "wrapper"
-//   const settingsDiv = document.querySelector(".settings.wrapper");
+function addMailButton() {
+  const settingsDiv = document.querySelector(".settings.wrapper");
 
-//   if (settingsDiv) {
-//     const mailButton = document.createElement("a");
-//     //Open gmail in a new tab
-//     mailButton.href = "https://mail.google.com";
-
-//     mailButton.textContent = "Contact Us";
-//     mailButton.style.color = "white";
-//     mailButton.style.textDecoration = "none";
-//     mailButton.style.marginLeft = "10px";
-//     mailButton.style.fontWeight = "bold";
-
-//     settingsDiv.insertBefore(mailButton, settingsDiv.firstChild);
-//   }
-// }
+  if (settingsDiv && !settingsDiv.querySelector(".mail-button")) {
+    const mailButton = document.createElement("a");
+    mailButton.className = "mail-button";
+    mailButton.href = "https://mail.google.com";
+    mailButton.textContent = "Contact Us";
+    mailButton.style.color = "white";
+    mailButton.style.textDecoration = "none";
+    mailButton.style.marginLeft = "10px";
+    mailButton.style.fontWeight = "bold";
+    settingsDiv.insertBefore(mailButton, settingsDiv.firstChild);
+  }
+}
 
 function observeDOMChanges() {
   const targetNode = document.body;
   const config = { childList: true, subtree: true };
+  let timeout;
 
   const callback = (mutationsList) => {
-    const operations = [
-      removeElementByClassName.bind(null, "subutton-wrapper"),
-      removeFooter,
-      replaceBraveLogoToGoogleLogo,
-      removeBorderFromSearchResults,
-      removeElementByClassName.bind(null, "llm suggestion"),
-      replaceFavicon,
-      changeTitle,
-      editSnippetDescription,
-      removeWaves,
-      moveVideoThumbnail,
-      addMailButton,
-    ];
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      const operations = [
+        removeElementByClassName.bind(null, "subutton-wrapper"),
+        removeFooter,
+        replaceBraveLogoToGoogleLogo,
+        removeBorderFromSearchResults,
+        removeElementByClassName.bind(null, "llm suggestion"),
+        replaceFavicon,
+        changeTitle,
+        editSnippetDescription,
+        removeWaves,
+        moveVideoThumbnail,
+        addMailButton,
+      ];
 
-    for (let mutation of mutationsList) {
-      if (mutation.type === "childList") {
-        operations.forEach((operation) => operation());
+      for (let mutation of mutationsList) {
+        if (mutation.type === "childList") {
+          operations.forEach((operation) => operation());
+        }
       }
-    }
+    }, 100); // Adjust the delay as needed
   };
 
   const observer = new MutationObserver(callback);
@@ -256,5 +244,5 @@ replaceFavicon();
 removeWaves();
 editSnippetDescription();
 moveVideoThumbnail();
-// addMailButton();
+addMailButton();
 observeDOMChanges();
