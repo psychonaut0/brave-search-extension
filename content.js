@@ -134,7 +134,7 @@ function editSnippetDescription() {
 }
 
 function removeElementByClassName(className) {
-  const element = document.querySelector(`.${className}`);
+  const element = document.querySelector(`${className}`);
   if (element) {
     element.remove();
   }
@@ -184,6 +184,7 @@ function addMailButton() {
     const mailButton = document.createElement("a");
     mailButton.className = "mail-button";
     mailButton.href = "https://mail.google.com";
+    mailButton.target = "_blank";
     mailButton.textContent = "Gmail";
     mailButton.style.color = "#dadfe1";
     mailButton.style.textDecoration = "none";
@@ -195,15 +196,14 @@ function addMailButton() {
 function observeDOMChanges() {
   const targetNode = document.body;
   const config = { childList: true, subtree: true };
-  let timeout;
 
   const callback = (mutationsList) => {
     const operations = [
-      removeElementByClassName.bind(null, "subutton-wrapper"),
+      removeElementByClassName.bind(null, ".subutton-wrapper"),
       removeFooter,
       replaceBraveLogoToGoogleLogo,
       removeBorderFromSearchResults,
-      removeElementByClassName.bind(null, "llm suggestion"),
+      removeElementByClassName.bind(null, ".llm.suggestion"),
       replaceFavicon,
       changeTitle,
       editSnippetDescription,
