@@ -228,6 +228,7 @@ async function addMailButton() {
       emailPopup.style.display = "flex";
       emailPopup.style.flexDirection = "column";
       emailPopup.style.padding = ".4rem";
+      emailPopup.style.minWidth = "350px";
 
       // Position the popup on the top right corner if searchbar-home is present
       const searchbarHome = document.querySelector("#searchbar-home");
@@ -298,6 +299,46 @@ async function addMailButton() {
   }
 }
 
+function replaceSettingsIcon() {
+  // Replace settings icon with a profile icon
+  const settingsButton = document.querySelector("#settings-button");
+
+  if (settingsButton && !settingsButton.querySelector("#profile-icon")) {
+    settingsButton.removeChild(settingsButton.firstChild);
+
+    const profileIcon = document.createElement("svg");
+    profileIcon.setAttribute("id", "profile-icon");
+    profileIcon.setAttribute("viewBox", "0 0 24 24");
+    profileIcon.setAttribute("fill", "none");
+    profileIcon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    profileIcon.setAttribute("fill", "none");
+    profileIcon.setAttribute("stroke", "currentColor");
+    profileIcon.setAttribute("stroke-width", "2");
+    profileIcon.setAttribute("stroke-linecap", "round");
+    profileIcon.setAttribute("stroke-linejoin", "round");
+    profileIcon.setAttribute("width", "24");
+    profileIcon.setAttribute("height", "24");
+    profileIcon.setAttribute("class", "icon");
+    profileIcon.setAttribute("color", "white");
+
+    const path = document.createElement("path");
+    path.setAttribute("d", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2");
+    path.setAttribute("fill-rule", "evenodd");
+    path.setAttribute("clip-rule", "evenodd");
+
+    const circle = document.createElement("circle");
+    circle.setAttribute("cx", "12");
+    circle.setAttribute("cy", "7");
+    circle.setAttribute("r", "4");
+    circle.setAttribute("fill-rule", "evenodd");
+    circle.setAttribute("clip-rule", "evenodd");
+
+    profileIcon.appendChild(circle);
+    profileIcon.appendChild(path);
+    settingsButton.appendChild(profileIcon);
+  }
+}
+
 function observeDOMChanges() {
   const targetNode = document.body;
   const config = { childList: true, subtree: true };
@@ -309,12 +350,15 @@ function observeDOMChanges() {
       replaceBraveLogoToGoogleLogo,
       removeBorderFromSearchResults,
       removeElementByClassName.bind(null, ".llm.suggestion"),
+      removeElementByClassName.bind(null, ".premium-cta"),
+      removeElementByClassName.bind(null, ".widget"),
       replaceFavicon,
       changeTitle,
       editSnippetDescription,
       removeWaves,
       moveVideoThumbnail,
       addMailButton,
+      replaceSettingsIcon,
     ];
 
     for (let mutation of mutationsList) {
@@ -329,14 +373,17 @@ function observeDOMChanges() {
 }
 
 replaceBraveLogoToGoogleLogo();
-removeElementByClassName("subutton-wrapper");
+removeElementByClassName(".subutton-wrapper");
 removeFooter();
 removeBorderFromSearchResults();
-removeElementByClassName("llm suggestion");
+removeElementByClassName(".llm.suggestion");
+removeElementByClassName(".premium-cta");
+removeElementByClassName(".widget");
 replaceCSSColorVariables();
 replaceFavicon();
 removeWaves();
 editSnippetDescription();
 moveVideoThumbnail();
 addMailButton();
+replaceSettingsIcon();
 observeDOMChanges();
