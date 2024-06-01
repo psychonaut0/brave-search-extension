@@ -220,7 +220,7 @@ async function addMailButton() {
       const emailPopup = document.createElement("div");
       emailPopup.className = "email-popup";
       emailPopup.style.position = "absolute";
-      emailPopup.style.zIndex = "9999999";
+      emailPopup.style.zIndex = "10000";
       emailPopup.style.backgroundColor = "#242731";
       emailPopup.style.borderRadius = "8px";
       emailPopup.style.color = "white";
@@ -303,7 +303,7 @@ function replaceSettingsIcon() {
   // Replace settings icon in home with profile icon
   const settingsButton = document.querySelector("#settings-button");
 
-  const svg = `<svg style="fill: none; stroke: #f3f5f7" id="profile-icon" stroke="currentColor" fill="none" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
+  const svg = `<svg style="fill: none; stroke: #f3f5f7" id="profile-icon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
 
   if (settingsButton && !settingsButton.querySelector("#profile-icon")) {
     settingsButton.innerHTML = svg;
