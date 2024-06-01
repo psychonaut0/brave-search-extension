@@ -300,42 +300,35 @@ async function addMailButton() {
 }
 
 function replaceSettingsIcon() {
-  // Replace settings icon with a profile icon
+  // Replace settings icon in home with profile icon
   const settingsButton = document.querySelector("#settings-button");
 
+  const svg = `<svg style="fill: none; stroke: #f3f5f7" id="profile-icon" stroke="currentColor" fill="none" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
+
   if (settingsButton && !settingsButton.querySelector("#profile-icon")) {
-    settingsButton.removeChild(settingsButton.firstChild);
+    settingsButton.innerHTML = svg;
+  }
 
-    const profileIcon = document.createElement("svg");
-    profileIcon.setAttribute("id", "profile-icon");
-    profileIcon.setAttribute("viewBox", "0 0 24 24");
-    profileIcon.setAttribute("fill", "none");
-    profileIcon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    profileIcon.setAttribute("fill", "none");
-    profileIcon.setAttribute("stroke", "currentColor");
-    profileIcon.setAttribute("stroke-width", "2");
-    profileIcon.setAttribute("stroke-linecap", "round");
-    profileIcon.setAttribute("stroke-linejoin", "round");
-    profileIcon.setAttribute("width", "24");
-    profileIcon.setAttribute("height", "24");
-    profileIcon.setAttribute("class", "icon");
-    profileIcon.setAttribute("color", "white");
+  // Replace settings icon in the drawer with profile icon
+  const drawerSettingsPanel = document.querySelector(".SettingsDrawer");
 
-    const path = document.createElement("path");
-    path.setAttribute("d", "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2");
-    path.setAttribute("fill-rule", "evenodd");
-    path.setAttribute("clip-rule", "evenodd");
+  if (!drawerSettingsPanel) return;
 
-    const circle = document.createElement("circle");
-    circle.setAttribute("cx", "12");
-    circle.setAttribute("cy", "7");
-    circle.setAttribute("r", "4");
-    circle.setAttribute("fill-rule", "evenodd");
-    circle.setAttribute("clip-rule", "evenodd");
+  const drawerSettingsButton =
+    drawerSettingsPanel.querySelector(".icon-wrapper");
 
-    profileIcon.appendChild(circle);
-    profileIcon.appendChild(path);
-    settingsButton.appendChild(profileIcon);
+  if (
+    drawerSettingsButton &&
+    !drawerSettingsButton.querySelector("#profile-icon")
+  ) {
+    drawerSettingsButton.innerHTML = svg;
+  }
+}
+
+function replaceElementTextByClassName(className, text) {
+  const element = document.querySelector(className);
+  if (element && element.textContent !== text) {
+    element.textContent = text;
   }
 }
 
@@ -352,6 +345,11 @@ function observeDOMChanges() {
       removeElementByClassName.bind(null, ".llm.suggestion"),
       removeElementByClassName.bind(null, ".premium-cta"),
       removeElementByClassName.bind(null, ".widget"),
+      replaceElementTextByClassName.bind(
+        null,
+        ".settings-header-text",
+        "Impostazioni utente"
+      ),
       replaceFavicon,
       changeTitle,
       editSnippetDescription,
