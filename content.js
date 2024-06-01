@@ -110,9 +110,51 @@ function moveVideoThumbnail() {
         });
 
         addPlayIconToAnchor(anchorElement);
-        anchorImg.style.borderRadius = "8px";
         anchorImg.style.border = "1px solid #21272a";
         videoThumbElement.remove();
+      }
+    }
+  });
+}
+
+function moveProductThumbnail() {
+  const snippets = document.querySelectorAll('.snippet[data-type="web"]');
+  snippets.forEach((snippet) => {
+    const anchorElement = snippet.querySelector("a[srp-el-jm-ea]");
+    const productThumbElement = snippet.querySelector(".product");
+
+    if (anchorElement && productThumbElement) {
+      // Get the div with the background image that has thumb class
+      const productThumbDiv = productThumbElement.querySelector(".thumb");
+
+      if (productThumbDiv) {
+        const productThumbSrc = productThumbDiv.style.backgroundImage
+          .replace('url("', "")
+          .replace('")', "");
+
+        const anchorImg = anchorElement.querySelector("img");
+
+        if (anchorImg) {
+          const updateImageSrc = () => {
+            anchorImg.src = productThumbSrc;
+          };
+
+          updateImageSrc();
+
+          const observer = new MutationObserver(() => {
+            if (anchorImg.src !== productThumbSrc) {
+              updateImageSrc();
+            }
+          });
+
+          observer.observe(anchorImg, {
+            attributes: true,
+            attributeFilter: ["src"],
+          });
+
+          anchorImg.style.border = "1px solid #21272a";
+          productThumbDiv.parentNode.remove();
+        }
       }
     }
   });
@@ -355,6 +397,7 @@ function observeDOMChanges() {
       editSnippetDescription,
       removeWaves,
       moveVideoThumbnail,
+      moveProductThumbnail,
       addMailButton,
       replaceSettingsIcon,
     ];
