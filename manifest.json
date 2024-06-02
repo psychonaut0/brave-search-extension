@@ -3,7 +3,7 @@
   "name": "Brave Search Mod",
   "version": "1.0",
   "description": "Customize the Brave Search home page",
-  "permissions": ["https://search.brave.com/*"],
+  "permissions": ["https://search.brave.com/*", "storage"],
   "content_scripts": [
     {
       "matches": ["https://search.brave.com/*"],

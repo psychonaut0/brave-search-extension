@@ -1,4 +1,4 @@
-async function sha256(rawData) {
+async function sha256(rawData: string | object) {
   const data =
     typeof rawData === "object" ? JSON.stringify(rawData) : String(rawData);
 
@@ -9,7 +9,7 @@ async function sha256(rawData) {
 }
 
 function replaceBraveLogoToGoogleLogo() {
-  const braveLogo = document.querySelectorAll("#logo img");
+  const braveLogo = document.querySelectorAll<HTMLImageElement>("#logo img");
   braveLogo.forEach((logo) => {
     if (logo) {
       logo.src =
@@ -18,7 +18,7 @@ function replaceBraveLogoToGoogleLogo() {
     }
   });
 
-  const braveNavLogo = document.querySelectorAll(".nav-logo img");
+  const braveNavLogo = document.querySelectorAll<HTMLImageElement>(".nav-logo img");
 
   braveNavLogo.forEach((logo) => {
     if (logo) {
@@ -39,7 +39,7 @@ function replaceFavicon() {
   document.head.appendChild(favicon);
 }
 
-function addPlayIconToAnchor(anchorElement) {
+function addPlayIconToAnchor(anchorElement: HTMLElement) {
   const overlayDiv = document.createElement("div");
   overlayDiv.style.position = "absolute";
   overlayDiv.style.width = "111px";
@@ -82,7 +82,7 @@ function moveVideoThumbnail() {
   const snippets = document.querySelectorAll('.snippet[data-type="web"]');
 
   snippets.forEach((snippet) => {
-    const anchorElement = snippet.querySelector("a[srp-el-jm-ea]");
+    const anchorElement = snippet.querySelector<HTMLAnchorElement>("a[srp-el-jm-ea]");
     const videoThumbElement = snippet.querySelector(".video-thumb");
 
     if (anchorElement && videoThumbElement) {
@@ -125,7 +125,7 @@ function moveProductThumbnail() {
 
     if (anchorElement && productThumbElement) {
       // Get the div with the background image that has thumb class
-      const productThumbDiv = productThumbElement.querySelector(".thumb");
+      const productThumbDiv = productThumbElement.querySelector<HTMLElement>(".thumb");
 
       if (productThumbDiv) {
         const productThumbSrc = productThumbDiv.style.backgroundImage
@@ -153,7 +153,7 @@ function moveProductThumbnail() {
           });
 
           anchorImg.style.border = "1px solid #21272a";
-          productThumbDiv.parentNode.remove();
+          productThumbDiv.parentElement?.remove();
         }
       }
     }
@@ -185,7 +185,7 @@ function editSnippetDescription() {
   });
 }
 
-function removeElementByClassName(className) {
+function removeElementByClassName(className: string) {
   const element = document.querySelector(`${className}`);
   if (element) {
     element.remove();
@@ -200,7 +200,7 @@ function removeFooter() {
 }
 
 function removeBorderFromSearchResults() {
-  const searchResults = document.querySelectorAll(".snippet[data-type]");
+  const searchResults = document.querySelectorAll<HTMLElement>(".snippet[data-type]");
   searchResults.forEach((result) => {
     result.style.border = "1px solid transparent";
   });
@@ -254,10 +254,10 @@ async function addMailButton() {
     mailButton.style.userSelect = "none";
     mailButton.onclick = () => {
       if (document.querySelector(".email-popup")) {
-        document.querySelector(".email-popup").remove();
+        document.querySelector<HTMLElement>(".email-popup")?.remove();
         return;
       }
-      const emailAddresses = [];
+      const emailAddresses: string[] = [];
 
       const emailPopup = document.createElement("div");
       emailPopup.className = "email-popup";
@@ -329,7 +329,7 @@ async function addMailButton() {
 
     // Close the popup when clicking outside of it
     document.body.onclick = (event) => {
-      if (!event.target.classList.contains("mail-button")) {
+      if (!(event.target instanceof Element) || !event.target.classList.contains("mail-button")) {
         const emailPopup = document.querySelector(".email-popup");
         if (emailPopup) {
           emailPopup.remove();
@@ -367,7 +367,7 @@ function replaceSettingsIcon() {
   }
 }
 
-function replaceElementTextByClassName(className, text) {
+function replaceElementTextByClassName(className: string, text: string) {
   const element = document.querySelector(className);
   if (element && element.textContent !== text) {
     element.textContent = text;
@@ -378,7 +378,7 @@ function observeDOMChanges() {
   const targetNode = document.body;
   const config = { childList: true, subtree: true };
 
-  const callback = (mutationsList) => {
+  const callback = (mutationsList: any) => {
     const operations = [
       removeElementByClassName.bind(null, ".subutton-wrapper"),
       removeFooter,

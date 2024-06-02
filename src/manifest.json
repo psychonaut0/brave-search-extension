@@ -1,6 +1,27 @@
 {
   "{{chrome}}.manifest_version": 2,
   "{{firefox}}.manifest_version": 2,
+  "{{chrome}}.name": "Brave search mod",
+  "{{firefox}}.name": "Brave search mod",
+  "{{chrome}}.description": "Brave search mod",
+  "{{firefox}}.description": "Brave search mod",
+  "{{chrome}}.version": "0.0.1",
+  "{{firefox}}.version": "0.0.1",
+  "{{chrome}}.permissions": ["https://search.brave.com/*", "storage"],
+  "{{firefox}}.permissions": ["https://search.brave.com/*", "storage"],
+  "{{chrome}}.content_scripts": [
+    {
+      "matches": ["https://search.brave.com/*"],
+      "js": ["src/content.ts"]
+    }
+  ],
+  "{{firefox}}.content_scripts": [
+    {
+      "matches": ["https://search.brave.com/*"],
+      "js": ["src/content.ts"]
+    }
+  ],
+
   "icons": {
     "16": "icon/16.png",
     "32": "icon/32.png",
