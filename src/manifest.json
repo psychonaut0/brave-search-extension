@@ -3,8 +3,8 @@
   "{{firefox}}.manifest_version": 2,
   "{{chrome}}.name": "Brave search mod",
   "{{firefox}}.name": "Brave search mod",
-  "{{chrome}}.description": "Brave search mod",
-  "{{firefox}}.description": "Brave search mod",
+  "{{chrome}}.description": "Customize the Brave Search home page",
+  "{{firefox}}.description": "Customize the Brave Search home page",
   "{{chrome}}.version": "0.0.1",
   "{{firefox}}.version": "0.0.1",
   "{{chrome}}.permissions": ["https://search.brave.com/*", "storage"],
@@ -28,12 +28,6 @@
     "48": "icon/48.png",
     "96": "icon/96.png",
     "128": "icon/128.png"
-  },
-  "{{chrome}}.action": {
-    "default_popup": "src/popup.html"
-  },
-  "{{firefox}}.browser_action": {
-    "default_popup": "src/popup.html"
   },
   "background": {
     "{{chrome}}.service_worker": "src/background.ts",
