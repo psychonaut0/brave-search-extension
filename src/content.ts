@@ -1,12 +1,7 @@
-async function sha256(rawData: string | object) {
-  const data =
-    typeof rawData === "object" ? JSON.stringify(rawData) : String(rawData);
+import { observeDOMChanges } from "./components/observer";
+import { addCssColorVariables } from "./components/stylesheets";
+import { removeElementByQuery, replaceElementTextByClassName, sha256 } from "./utils/functions";
 
-  const msgBuffer = new TextEncoder().encode(data);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-}
 
 function replaceBraveLogoToGoogleLogo() {
   const braveLogo = document.querySelectorAll<HTMLImageElement>("#logo img");
@@ -185,48 +180,11 @@ function editSnippetDescription() {
   });
 }
 
-function removeElementByClassName(className: string) {
-  const element = document.querySelector(`${className}`);
-  if (element) {
-    element.remove();
-  }
-}
-
-function removeFooter() {
-  const footer = document.querySelector("footer");
-  if (footer) {
-    footer.remove();
-  }
-}
-
 function removeBorderFromSearchResults() {
   const searchResults = document.querySelectorAll<HTMLElement>(".snippet[data-type]");
   searchResults.forEach((result) => {
     result.style.border = "1px solid transparent";
   });
-}
-
-function removeWaves() {
-  document
-    .querySelectorAll(".waves-top, .waves-bottom")
-    .forEach((wave) => wave.remove());
-}
-
-function replaceCSSColorVariables() {
-  const style = document.createElement("style");
-  style.innerHTML = `
-    :root {
-      --color-serp-bar-bg: transparent !important; 
-    }
-    #searchform-actions::before {
-      display: none !important;
-    }
-    .searchform-focused form,
-    #autocomplete {
-      background: #242731 !important;
-    }`;
-
-  document.head.appendChild(style);
 }
 
 async function addMailButton() {
@@ -367,26 +325,31 @@ function replaceSettingsIcon() {
   }
 }
 
-function replaceElementTextByClassName(className: string, text: string) {
-  const element = document.querySelector(className);
-  if (element && element.textContent !== text) {
-    element.textContent = text;
-  }
-}
+replaceBraveLogoToGoogleLogo();
+removeElementByQuery(".subutton-wrapper");
+removeElementByQuery("footer");
+removeBorderFromSearchResults();
+removeElementByQuery(".llm.suggestion");
+removeElementByQuery(".premium-cta");
+removeElementByQuery(".widget");
+addCssColorVariables();
+replaceFavicon();
+removeElementByQuery(".waves-top");
+removeElementByQuery(".waves-bottom");
+editSnippetDescription();
+moveVideoThumbnail();
+addMailButton();
+replaceSettingsIcon();
 
-function observeDOMChanges() {
-  const targetNode = document.body;
-  const config = { childList: true, subtree: true };
 
-  const callback = (mutationsList: any) => {
-    const operations = [
-      removeElementByClassName.bind(null, ".subutton-wrapper"),
-      removeFooter,
+observeDOMChanges([
+  removeElementByQuery.bind(null, ".subutton-wrapper"),
+      removeElementByQuery.bind(null, "footer"),
       replaceBraveLogoToGoogleLogo,
       removeBorderFromSearchResults,
-      removeElementByClassName.bind(null, ".llm.suggestion"),
-      removeElementByClassName.bind(null, ".premium-cta"),
-      removeElementByClassName.bind(null, ".widget"),
+      removeElementByQuery.bind(null, ".llm.suggestion"),
+      removeElementByQuery.bind(null, ".premium-cta"),
+      removeElementByQuery.bind(null, ".widget"),
       replaceElementTextByClassName.bind(
         null,
         ".settings-header-text",
@@ -395,36 +358,10 @@ function observeDOMChanges() {
       replaceFavicon,
       changeTitle,
       editSnippetDescription,
-      removeWaves,
+      removeElementByQuery.bind(null, ".waves-top"),
+      removeElementByQuery.bind(null, ".waves-bottom"),
       moveVideoThumbnail,
       moveProductThumbnail,
       addMailButton,
       replaceSettingsIcon,
-    ];
-
-    for (let mutation of mutationsList) {
-      if (mutation.type === "childList") {
-        operations.forEach((operation) => operation());
-      }
-    }
-  };
-
-  const observer = new MutationObserver(callback);
-  observer.observe(targetNode, config);
-}
-
-replaceBraveLogoToGoogleLogo();
-removeElementByClassName(".subutton-wrapper");
-removeFooter();
-removeBorderFromSearchResults();
-removeElementByClassName(".llm.suggestion");
-removeElementByClassName(".premium-cta");
-removeElementByClassName(".widget");
-replaceCSSColorVariables();
-replaceFavicon();
-removeWaves();
-editSnippetDescription();
-moveVideoThumbnail();
-addMailButton();
-replaceSettingsIcon();
-observeDOMChanges();
+]);
