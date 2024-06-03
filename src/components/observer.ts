@@ -1,5 +1,3 @@
-import { removeElementByQuery } from "../utils/functions";
-
 export function observeDOMChanges(operations: Function[]) {
   const targetNode = document.body;
   const config = { childList: true, subtree: true };
