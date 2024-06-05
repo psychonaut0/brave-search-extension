@@ -18,6 +18,11 @@ export default defineConfig({
   plugins: [
     react(),
     webExtension({
+      webExtConfig: {
+        startUrl: ["https://search.brave.com/"],
+        chromiumBinary:
+          "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+      },
       manifest: generateManifest,
     }),
   ],
