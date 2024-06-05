@@ -1,4 +1,3 @@
-
 export function replaceBraveLogoToGoogleLogo() {
   const braveLogo = document.querySelectorAll<HTMLImageElement>("#logo img");
   braveLogo.forEach((logo) => {
@@ -9,7 +8,20 @@ export function replaceBraveLogoToGoogleLogo() {
     }
   });
 
-  const braveNavLogo = document.querySelectorAll<HTMLImageElement>(".nav-logo img");
+  // Replace picture source scrset for the logo
+  const braveLogoSrcset = document.querySelectorAll<HTMLSourceElement>(
+    "#logo picture source"
+  );
+
+  braveLogoSrcset.forEach((logo) => {
+    if (logo) {
+      logo.srcset =
+        "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png";
+    }
+  });
+
+  const braveNavLogo =
+    document.querySelectorAll<HTMLImageElement>(".nav-logo img");
 
   braveNavLogo.forEach((logo) => {
     if (logo) {
