@@ -1,12 +1,23 @@
-import { replaceBraveLogoToGoogleLogo, replaceSettingsIcon } from "./components/general";
+import {
+  replaceBraveLogoToGoogleLogo,
+  replaceSettingsIcon,
+} from "./components/general";
 import { changeTitle, replaceFavicon } from "./components/head";
 import { addMailButton } from "./components/mail";
 import { observeDOMChanges } from "./components/observer";
-import { editSnippetDescription, moveProductThumbnail, moveVideoThumbnail, removeBorderFromSearchResults } from "./components/search-result";
-import { addNewSettingsSidePanel } from "./components/settings";
+import {
+  editSnippetDescription,
+  moveProductThumbnail,
+  moveVideoThumbnail,
+  removeBorderFromSearchResults,
+} from "./components/search-result";
+// TODO: Add when implemented
+// import { addNewSettingsSidePanel } from "./components/settings";
 import { addCssColorVariables } from "./components/stylesheets";
-import { removeElementByQuery, replaceElementTextByClassName } from "./utils/functions";
-
+import {
+  removeElementByQuery,
+  replaceElementTextByClassName,
+} from "./utils/functions";
 
 replaceBraveLogoToGoogleLogo();
 removeElementByQuery(".subutton-wrapper");
@@ -24,28 +35,28 @@ moveVideoThumbnail();
 addMailButton();
 replaceSettingsIcon();
 
-
 observeDOMChanges([
   removeElementByQuery.bind(null, ".subutton-wrapper"),
-      removeElementByQuery.bind(null, "footer"),
-      replaceBraveLogoToGoogleLogo,
-      removeBorderFromSearchResults,
-      removeElementByQuery.bind(null, ".llm.suggestion"),
-      removeElementByQuery.bind(null, ".premium-cta"),
-      // removeElementByQuery.bind(null, ".widget"),
-      replaceElementTextByClassName.bind(
-        null,
-        ".settings-header-text",
-        "Customization panel"
-      ),
-      replaceFavicon,
-      changeTitle,
-      editSnippetDescription,
-      removeElementByQuery.bind(null, ".waves-top"),
-      removeElementByQuery.bind(null, ".waves-bottom"),
-      moveVideoThumbnail,
-      moveProductThumbnail,
-      addMailButton,
-      replaceSettingsIcon,
-      addNewSettingsSidePanel
+  removeElementByQuery.bind(null, "footer"),
+  replaceBraveLogoToGoogleLogo,
+  removeBorderFromSearchResults,
+  removeElementByQuery.bind(null, ".llm.suggestion"),
+  removeElementByQuery.bind(null, ".premium-cta"),
+  // removeElementByQuery.bind(null, ".widget"),
+  replaceElementTextByClassName.bind(
+    null,
+    ".settings-header-text",
+    "Customization panel"
+  ),
+  replaceFavicon,
+  changeTitle,
+  editSnippetDescription,
+  removeElementByQuery.bind(null, ".waves-top"),
+  removeElementByQuery.bind(null, ".waves-bottom"),
+  moveVideoThumbnail,
+  moveProductThumbnail,
+  addMailButton,
+  replaceSettingsIcon,
+  // TODO: Add when implemented
+  // addNewSettingsSidePanel
 ]);
