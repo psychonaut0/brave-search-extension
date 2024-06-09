@@ -11,8 +11,7 @@ import {
   moveVideoThumbnail,
   removeBorderFromSearchResults,
 } from "./components/search-result";
-// TODO: Add when implemented
-// import { addNewSettingsSidePanel } from "./components/settings";
+import { addNewSettingsSidePanel, checkStorage } from "./components/settings";
 import { addCssColorVariables } from "./components/stylesheets";
 import {
   removeElementByQuery,
@@ -34,6 +33,7 @@ editSnippetDescription();
 moveVideoThumbnail();
 addMailButton();
 replaceSettingsIcon();
+addNewSettingsSidePanel();
 
 observeDOMChanges([
   removeElementByQuery.bind(null, ".subutton-wrapper"),
@@ -57,6 +57,6 @@ observeDOMChanges([
   moveProductThumbnail,
   addMailButton,
   replaceSettingsIcon,
-  // TODO: Add when implemented
-  // addNewSettingsSidePanel
+  addNewSettingsSidePanel,
+  checkStorage,
 ]);

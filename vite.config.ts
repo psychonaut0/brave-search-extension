@@ -20,8 +20,7 @@ export default defineConfig({
     webExtension({
       webExtConfig: {
         startUrl: ["https://search.brave.com/"],
-        chromiumBinary:
-          "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+        chromiumBinary: "/usr/bin/brave",
       },
       manifest: generateManifest,
     }),
