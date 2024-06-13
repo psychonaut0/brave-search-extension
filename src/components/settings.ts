@@ -1,4 +1,4 @@
-import { htmlButton, htmlInput } from "../utils/html-elements";
+import { htmlButton, htmlInput, htmlSelect } from "../utils/html-elements";
 import { plusIcon, trashIcon } from "../utils/icons";
 
 interface Email {
@@ -102,15 +102,39 @@ function addMailSettings(content: HTMLElement) {
     emailListElement.style.marginBottom = "1rem";
     // Create the input element
     const inputElement = htmlInput();
+    inputElement.style.width = "70%";
+
+    const emailProviderElement = htmlSelect([
+      {
+        value: "gmail",
+        label: "Gmail",
+      },
+      {
+        value: "outlook",
+        label: "Outlook",
+      },
+      {
+        value: "yahoo",
+        label: "Yahoo",
+      },
+    ]);
+
+    emailProviderElement.style.width = "30%";
 
     // Create the new email adder element
     const newEmailElement = document.createElement("div");
     newEmailElement.style.display = "flex";
     newEmailElement.style.flexDirection = "column";
 
+    const addWrapper = document.createElement("div");
+    addWrapper.style.display = "flex";
+    addWrapper.id = "add-email-wrapper";
+    addWrapper.style.flexDirection = "column";
+    addWrapper.style.alignItems = "flex-end";
+    addWrapper.style.gap = "0.5rem";
+
     const inputWrapper = document.createElement("div");
     inputWrapper.style.display = "flex";
-    inputWrapper.style.justifyContent = "space-between";
     inputWrapper.style.alignItems = "center";
     inputWrapper.style.width = "100%";
     inputWrapper.style.gap = "0.5rem";
@@ -131,7 +155,7 @@ function addMailSettings(content: HTMLElement) {
         if (email && !emails.find((e) => e.email === email)) {
           emails.push({
             email,
-            provider: email.split("@")[1],
+            provider: emailProviderElement.value,
           });
           chrome.storage.local.set({ emails });
         }
@@ -142,11 +166,14 @@ function addMailSettings(content: HTMLElement) {
 
     // Append the input and button to the input wrapper
     inputWrapper.appendChild(inputElement);
-    inputWrapper.appendChild(addButton);
+    inputWrapper.appendChild(emailProviderElement);
+
+    addWrapper.appendChild(inputWrapper);
+    addWrapper.appendChild(addButton);
 
     // Append the input wrapper to the email element
     newEmailElement.appendChild(emailListElement);
-    newEmailElement.appendChild(inputWrapper);
+    newEmailElement.appendChild(addWrapper);
 
     // Append the new email element to the content
     newSectionElement.appendChild(newEmailElement);

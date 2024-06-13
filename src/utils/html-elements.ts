@@ -1,3 +1,8 @@
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
 export function htmlButton(
   content: string,
   icon: string,
@@ -81,4 +86,27 @@ export function htmlInput(): HTMLInputElement {
   inputElement.style.border = "none";
 
   return inputElement;
+}
+
+export function htmlSelect(options: SelectOption[]): HTMLSelectElement {
+  // Create the select element
+  const selectElement = document.createElement("select");
+  selectElement.style.paddingLeft = "0.5rem";
+  selectElement.style.paddingRight = "0.5rem";
+  selectElement.style.paddingTop = "0.5rem";
+  selectElement.style.paddingBottom = "0.5rem";
+  selectElement.style.backgroundColor = "#242731";
+  selectElement.style.borderRadius = "0.25rem";
+  selectElement.style.border = "none";
+  selectElement.style.color = "#ffffff";
+
+  // Create the options
+  options.forEach((option) => {
+    const optionElement = document.createElement("option");
+    optionElement.value = option.value;
+    optionElement.innerHTML = option.label;
+    selectElement.appendChild(optionElement);
+  });
+
+  return selectElement;
 }
