@@ -1,10 +1,6 @@
 import { htmlButton, htmlInput, htmlSelect } from "../utils/html-elements";
 import { plusIcon, trashIcon } from "../utils/icons";
-
-interface Email {
-  email: string;
-  provider: string;
-}
+import { Email } from "../utils/types";
 
 export function addNewSettingsSidePanel() {
   if (document.querySelector(".user-widget")) {
@@ -142,9 +138,7 @@ function addMailSettings(content: HTMLElement) {
     const addButton = htmlButton("Add", plusIcon(), "primary", () => {
       chrome.storage.local.get("emails", (data) => {
         let emails = (data.emails as Email[]) || [];
-
         const email = inputElement.value;
-
         // Check if valid email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
@@ -184,13 +178,13 @@ function addMailSettings(content: HTMLElement) {
     // Listen for storage changes to update the email list
     chrome.storage.onChanged.addListener((changes) => {
       if (changes.emails) {
-        updateEmailsList();
+        updateSettingsEmailsList();
       }
     });
   }
 }
 
-function updateEmailsList() {
+export function updateSettingsEmailsList() {
   const emailListElement = document.querySelector(".email-list");
 
   if (emailListElement) {
@@ -233,18 +227,4 @@ function updateEmailsList() {
       });
     });
   }
-}
-
-export function checkStorage() {
-  chrome.storage.local.get("emails", (data) => {
-    if (!data.emails) {
-      chrome.storage.local.set({ emails: [] });
-    } else {
-      // Check if emails are already present
-
-      if (document.querySelector(".email-list")?.children.length === 0) {
-        updateEmailsList();
-      }
-    }
-  });
 }
