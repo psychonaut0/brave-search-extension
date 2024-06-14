@@ -1,0 +1,36 @@
+{
+  "{{chrome}}.manifest_version": 2,
+  "{{firefox}}.manifest_version": 2,
+  "{{chrome}}.name": "Brave search mod",
+  "{{firefox}}.name": "Brave search mod",
+  "{{chrome}}.description": "Customize the Brave Search home page",
+  "{{firefox}}.description": "Customize the Brave Search home page",
+  "{{chrome}}.version": "0.1.0",
+  "{{firefox}}.version": "0.1.0",
+  "{{chrome}}.permissions": ["https://search.brave.com/*", "storage"],
+  "{{firefox}}.permissions": ["https://search.brave.com/*", "storage"],
+  "{{chrome}}.content_scripts": [
+    {
+      "matches": ["https://search.brave.com/*"],
+      "js": ["src/content.ts"]
+    }
+  ],
+  "{{firefox}}.content_scripts": [
+    {
+      "matches": ["https://search.brave.com/*"],
+      "js": ["src/content.ts"]
+    }
+  ],
+
+  "icons": {
+    "16": "icon/16.png",
+    "32": "icon/32.png",
+    "48": "icon/48.png",
+    "96": "icon/96.png",
+    "128": "icon/128.png"
+  },
+  "background": {
+    "{{chrome}}.service_worker": "src/background.ts",
+    "{{firefox}}.scripts": ["src/background.ts"]
+  }
+}
