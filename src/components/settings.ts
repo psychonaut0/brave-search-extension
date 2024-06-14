@@ -146,6 +146,19 @@ function addMailSettings(content: HTMLElement) {
           return;
         }
 
+        // Check if email already exists
+        if (emails.find((e) => e.email === email)) {
+          alert("Email already exists");
+          return;
+        }
+
+        if (emailProviderElement.value === "outlook") {
+          if (emails.find((e) => e.provider === "outlook")) {
+            alert("Only one Outlook email is allowed");
+            return;
+          }
+        }
+
         if (email && !emails.find((e) => e.email === email)) {
           emails.push({
             email,

@@ -85,8 +85,9 @@ export function updateEmailList() {
       if (document.getElementById(email.email)) return;
       const emailElement = document.createElement("a");
       emailElement.id = email.email;
-      emailElement.href = `https://mail.google.com/mail/u/${email.email}}`;
+      emailElement.href = `https://mail.google.com/mail/u/${email.email}`;
       emailElement.textContent = email.email;
+      emailElement.setAttribute("target", "_blank");
       emailElement.style.color = "white";
       emailElement.style.textDecoration = "none";
       emailElement.style.paddingLeft = ".4rem";
