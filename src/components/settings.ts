@@ -1,6 +1,6 @@
 import { htmlButton, htmlInput, htmlSelect } from "../utils/html-elements";
 import { plusIcon, trashIcon } from "../utils/icons";
-import { Email } from "../utils/types";
+import { Email, Provider } from "../utils/types";
 
 export function addNewSettingsSidePanel() {
   if (document.querySelector(".user-widget")) {
@@ -162,7 +162,7 @@ function addMailSettings(content: HTMLElement) {
         if (email && !emails.find((e) => e.email === email)) {
           emails.push({
             email,
-            provider: emailProviderElement.value,
+            provider: emailProviderElement.value as Provider,
           });
           chrome.storage.local.set({ emails });
         }

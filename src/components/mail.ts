@@ -1,5 +1,5 @@
 import { sha256 } from "../utils/functions";
-import { Email } from "../utils/types";
+import { Email, Provider } from "../utils/types";
 
 export async function addMailButton() {
   const settingsDiv = document.querySelector(".settings.wrapper");
@@ -85,7 +85,7 @@ export function updateEmailList() {
       if (document.getElementById(email.email)) return;
       const emailElement = document.createElement("a");
       emailElement.id = email.email;
-      emailElement.href = `https://mail.google.com/mail/u/${email.email}`;
+      emailElement.href = getProviderHref(email.provider, email.email);
       emailElement.textContent = email.email;
       emailElement.setAttribute("target", "_blank");
       emailElement.style.color = "white";
@@ -126,4 +126,17 @@ export function updateEmailList() {
       emailPopup.appendChild(emailElement);
     });
   });
+}
+
+function getProviderHref(provider: Provider, email: string) {
+  switch (provider) {
+    case "gmail":
+      return `https://mail.google.com/mail/u/${email}`;
+    case "outlook":
+      return `https://outlook.office365.com/mail/`;
+    case "yahoo":
+      return `https://mail.yahoo.com/`;
+    default:
+      return "";
+  }
 }
