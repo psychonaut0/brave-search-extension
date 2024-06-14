@@ -4,15 +4,14 @@ import {
 } from "./components/general";
 import { changeTitle, replaceFavicon } from "./components/head";
 import { addMailButton } from "./components/mail";
-import { observeDOMChanges } from "./components/observer";
+import { checkStorage, observeDOMChanges } from "./components/observer";
 import {
   editSnippetDescription,
   moveProductThumbnail,
   moveVideoThumbnail,
   removeBorderFromSearchResults,
 } from "./components/search-result";
-// TODO: Add when implemented
-// import { addNewSettingsSidePanel } from "./components/settings";
+import { addNewSettingsSidePanel } from "./components/settings";
 import { addCssColorVariables } from "./components/stylesheets";
 import {
   removeElementByQuery,
@@ -34,6 +33,8 @@ editSnippetDescription();
 moveVideoThumbnail();
 addMailButton();
 replaceSettingsIcon();
+addNewSettingsSidePanel();
+checkStorage();
 
 observeDOMChanges([
   removeElementByQuery.bind(null, ".subutton-wrapper"),
@@ -57,6 +58,6 @@ observeDOMChanges([
   moveProductThumbnail,
   addMailButton,
   replaceSettingsIcon,
-  // TODO: Add when implemented
-  // addNewSettingsSidePanel
+  addNewSettingsSidePanel,
+  checkStorage,
 ]);
