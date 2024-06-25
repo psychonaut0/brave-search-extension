@@ -28,8 +28,6 @@ export function observeDOMChanges(operations: Function[]) {
 }
 
 export function checkStorage() {
-  console.log("zanzan");
-
   chrome.storage.local.get("emails", (data) => {
     if (!data.emails) {
       chrome.storage.local.set({ emails: [] });

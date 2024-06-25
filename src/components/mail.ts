@@ -2,9 +2,11 @@ import { sha256 } from "../utils/functions";
 import { Email, Provider } from "../utils/types";
 
 export async function addMailButton() {
-  const settingsDiv = document.querySelector(".settings.wrapper");
+  const settingsDiv: HTMLElement | null = document.querySelector("#settings");
 
   if (settingsDiv && !settingsDiv.querySelector(".mail-button")) {
+    settingsDiv.style.display = "flex";
+
     // Create mail button that shows a popup with the email addresses to choose from
     const mailButton = document.createElement("div");
     mailButton.className = "mail-button";
@@ -47,8 +49,8 @@ export async function addMailButton() {
       // Position the popup on the top right corner if searchbar-home is present
       const searchbarHome = document.querySelector("#searchbar-home");
       if (searchbarHome) {
-        emailPopup.style.top = "60px";
-        emailPopup.style.right = "60px";
+        emailPopup.style.top = "75px";
+        emailPopup.style.right = "70px";
       } else {
         emailPopup.style.top = "74px";
         emailPopup.style.right = "70px";
