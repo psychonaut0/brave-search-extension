@@ -32,7 +32,10 @@ export function addNewSettingsSidePanel() {
       }
 
       // Prepend the new widget to the settings drawer
-      settingsDrawer.prepend(newWidgetElement);
+      settingsDrawer.insertBefore(
+        newWidgetElement,
+        settingsDrawer.querySelector("section")
+      );
     }
   }
 }
@@ -181,7 +184,7 @@ function addMailSettings(content: HTMLElement) {
     // Append the new email element to the content
     newSectionElement.appendChild(newEmailElement);
 
-    // Append the new section element to the content
+    // Append the new section element to the content after the h1
     content.appendChild(newSectionElement);
 
     // Listen for storage changes to update the email list
