@@ -7,19 +7,17 @@ export function addNewSettingsSidePanel() {
     return;
   }
   // Get settings drawer element
-  const settingsDrawer = document.querySelector(".SettingsDrawer__content");
+  const settingsDrawer = document.querySelector(".settings-content");
 
   // Copy the widget element
   if (settingsDrawer) {
-    const widgetElement = settingsDrawer.querySelector(".widget");
+    const widgetElement = settingsDrawer.querySelector("section");
 
     if (widgetElement) {
       // Create a new widget changing the header and content
       const newWidgetElement = widgetElement.cloneNode(true) as HTMLElement;
-      const widgetHeader = newWidgetElement.querySelector("header");
+      const widgetHeader = newWidgetElement.querySelector("h3");
       const content = newWidgetElement.querySelector("div");
-
-      console.log("NEW", newWidgetElement);
 
       // Add new class to identify the new widget
       newWidgetElement.classList.add("user-widget");
@@ -34,7 +32,10 @@ export function addNewSettingsSidePanel() {
       }
 
       // Prepend the new widget to the settings drawer
-      settingsDrawer.prepend(newWidgetElement);
+      settingsDrawer.insertBefore(
+        newWidgetElement,
+        settingsDrawer.querySelector("section")
+      );
     }
   }
 }
@@ -58,7 +59,7 @@ function addMailSettings(content: HTMLElement) {
     newSectionElement.style.flexDirection = "column";
 
     // Edit the new section element header
-    const header = newSectionElement.querySelector("header");
+    const header = newSectionElement.querySelector(".text");
     if (header) {
       // Edit the h3
       const h3 = header.querySelector("h3");
@@ -66,7 +67,7 @@ function addMailSettings(content: HTMLElement) {
         h3.innerHTML = "Mail Settings";
       }
       // Edit the icon
-      const icon = header.querySelector("svg");
+      const icon = newSectionElement.querySelector("svg");
       if (icon) {
         icon.setAttribute("viewBox", "0 0 24 24");
         icon.setAttribute("fill", "none");
@@ -77,14 +78,12 @@ function addMailSettings(content: HTMLElement) {
         icon.style.fill = "none";
         icon.innerHTML = `<path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8"></path><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path><path d="M19 16v6"></path><path d="M16 19h6"></path>`;
       }
-    }
-    // Edit the content
-    const rowContent = newSectionElement.querySelector(".content");
-    // Change the text in the span
-    if (rowContent) {
-      const spanElement = rowContent.querySelector("span");
-      if (spanElement) {
-        spanElement.innerHTML =
+      // Edit the content
+      const rowContent = header.querySelector("div");
+
+      // Change the text in the span
+      if (rowContent) {
+        rowContent.innerHTML =
           "Setup your email addresses to show in the mail button";
       }
     }
@@ -185,7 +184,7 @@ function addMailSettings(content: HTMLElement) {
     // Append the new email element to the content
     newSectionElement.appendChild(newEmailElement);
 
-    // Append the new section element to the content
+    // Append the new section element to the content after the h1
     content.appendChild(newSectionElement);
 
     // Listen for storage changes to update the email list

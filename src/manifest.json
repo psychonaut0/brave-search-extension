@@ -5,8 +5,8 @@
   "{{firefox}}.name": "Brave search mod",
   "{{chrome}}.description": "Customize the Brave Search home page",
   "{{firefox}}.description": "Customize the Brave Search home page",
-  "{{chrome}}.version": "0.1.0",
-  "{{firefox}}.version": "0.1.0",
+  "{{chrome}}.version": "0.1.1",
+  "{{firefox}}.version": "0.1.1",
   "{{chrome}}.permissions": ["https://search.brave.com/*", "storage"],
   "{{firefox}}.permissions": ["https://search.brave.com/*", "storage"],
   "{{chrome}}.content_scripts": [
