@@ -11,13 +11,13 @@
   "{{firefox}}.permissions": ["https://search.brave.com/*", "storage"],
   "{{chrome}}.content_scripts": [
     {
-      "matches": ["https://search.brave.com/*"],
+      "matches": ["https://search.brave.com/*", "https://duckduckgo.com/*"],
       "js": ["src/content.ts"]
     }
   ],
   "{{firefox}}.content_scripts": [
     {
-      "matches": ["https://search.brave.com/*"],
+      "matches": ["https://search.brave.com/*", "https://duckduckgo.com/*"],
       "js": ["src/content.ts"]
     }
   ],
