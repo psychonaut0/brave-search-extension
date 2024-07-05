@@ -1,8 +1,16 @@
 import { isBrave, sha256 } from "../../utils/functions";
 import { htmlButton } from "../../utils/html-elements";
 import { Email, Provider } from "../../utils/types";
-import { bravePopupPosition } from "./brave";
-import { duckDuckGoPopupPosition } from "./duckduckgo";
+import {
+  braveEmailElementStyle,
+  bravePopupPosition,
+  bravePopupStyle,
+} from "./brave";
+import {
+  duckDuckGoEmailElementStyle,
+  duckDuckGoPopupPosition,
+  duckDuckGoPopupStyle,
+} from "./duckduckgo";
 
 export async function addMailButton(settingsDiv: HTMLElement | null) {
   if (settingsDiv && !settingsDiv.querySelector(".mail-button")) {
@@ -47,47 +55,9 @@ export function updateEmailList() {
   chrome.storage.local.get("emails", (data) => {
     (data.emails as Email[]).forEach(async (email) => {
       if (document.getElementById(email.email)) return;
-      const emailElement = document.createElement("a");
-      emailElement.id = email.email;
-      emailElement.href = getProviderHref(email.provider, email.email);
-      emailElement.textContent = email.email;
-      emailElement.setAttribute("target", "_blank");
-      emailElement.style.color = "white";
-      emailElement.style.textDecoration = "none";
-      emailElement.style.paddingLeft = ".4rem";
-      emailElement.style.paddingRight = ".4rem";
-      emailElement.style.paddingTop = ".2rem";
-      emailElement.style.paddingBottom = ".2rem";
-      emailElement.style.borderRadius = "8px";
-      emailElement.style.display = "flex";
-      emailElement.style.alignItems = "center";
-      emailElement.style.justifyContent = "flex-start";
-      emailElement.style.gap = "8px";
-      emailElement.style.transition = "background-color 0.1s";
-      emailElement.style.fontSize = ".8rem";
-      emailElement.style.height = "48px";
-
-      // Creata avatar sha256
-      const avatar = await sha256(email);
-
-      // Add profile picture
-      const profilePicture = document.createElement("img");
-      profilePicture.src = `https://www.gravatar.com/avatar/${avatar}?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/${email.email}/64/random/ff0000/1/true/true/true/svg`;
-      profilePicture.style.width = "32px";
-      profilePicture.style.height = "32px";
-      profilePicture.style.borderRadius = "50%";
-      profilePicture.style.marginRight = "4px";
-      emailElement.prepend(profilePicture);
-
-      // Add hover effect
-      emailElement.onmouseover = () => {
-        emailElement.style.backgroundColor = "#343847";
-      };
-      emailElement.onmouseout = () => {
-        emailElement.style.backgroundColor = "transparent";
-      };
-
-      emailPopup.appendChild(emailElement);
+      emailElement(email).then((emailElement) =>
+        emailPopup.appendChild(emailElement)
+      );
     });
   });
 }
@@ -105,6 +75,47 @@ function getProviderHref(provider: Provider, email: string) {
   }
 }
 
+async function emailElement(email: Email) {
+  const emailElement = document.createElement("a");
+  emailElement.id = email.email;
+  emailElement.href = getProviderHref(email.provider, email.email);
+  emailElement.textContent = email.email;
+  emailElement.setAttribute("target", "_blank");
+  emailElement.style.color = "white";
+  emailElement.style.textDecoration = "none";
+  emailElement.style.paddingLeft = ".4rem";
+  emailElement.style.paddingRight = ".4rem";
+  emailElement.style.borderRadius = "8px";
+  emailElement.style.display = "flex";
+  emailElement.style.alignItems = "center";
+  emailElement.style.justifyContent = "flex-start";
+  emailElement.style.transition = "all 0.1s";
+  emailElement.style.fontSize = ".8rem";
+
+  // Creata avatar sha256
+  const avatar = await sha256(email);
+
+  // Add profile picture
+  const profilePicture = document.createElement("img");
+  profilePicture.src = `https://www.gravatar.com/avatar/${avatar}?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/${email.email}/64/random/ff0000/1/true/true/true/svg`;
+
+  profilePicture.style.borderRadius = "50%";
+  profilePicture.style.marginRight = "4px";
+  emailElement.prepend(profilePicture);
+
+  emailElement.onmouseout = () => {
+    emailElement.style.backgroundColor = "transparent";
+  };
+
+  if (isBrave()) {
+    braveEmailElementStyle(emailElement, profilePicture);
+  } else {
+    duckDuckGoEmailElementStyle(emailElement, profilePicture);
+  }
+
+  return emailElement;
+}
+
 function showEmailPopup() {
   if (document.querySelector(".email-popup")) {
     document.querySelector<HTMLElement>(".email-popup")?.remove();
@@ -114,14 +125,16 @@ function showEmailPopup() {
   emailPopup.className = "email-popup";
   emailPopup.style.position = "absolute";
   emailPopup.style.zIndex = "10000";
-  emailPopup.style.backgroundColor = "#242731";
-  emailPopup.style.borderRadius = "8px";
-  emailPopup.style.color = "white";
   emailPopup.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
   emailPopup.style.display = "flex";
   emailPopup.style.flexDirection = "column";
   emailPopup.style.padding = ".4rem";
   emailPopup.style.minWidth = "350px";
+  if (isBrave()) {
+    bravePopupStyle(emailPopup);
+  } else {
+    duckDuckGoPopupStyle(emailPopup);
+  }
 
   if (isBrave()) {
     bravePopupPosition(emailPopup);
