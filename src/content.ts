@@ -15,7 +15,8 @@ import {
   moveVideoThumbnail,
   removeBorderFromSearchResults,
 } from "./components/search-result";
-import { addNewSettingsSidePanel } from "./components/settings";
+import { addBraveNewSettingsSidePanel } from "./components/settings/brave";
+import { addDuckDuckNewSettings } from "./components/settings/duckduckgo";
 import { addCssColorVariables } from "./components/stylesheets";
 import {
   isBrave,
@@ -39,7 +40,7 @@ if (isBrave()) {
   moveVideoThumbnail();
   addBraveMailButton();
   replaceSettingsIcon();
-  addNewSettingsSidePanel();
+  addBraveNewSettingsSidePanel();
   checkStorage();
 
   observeDOMChanges([
@@ -64,7 +65,7 @@ if (isBrave()) {
     moveProductThumbnail,
     addBraveMailButton,
     replaceSettingsIcon,
-    addNewSettingsSidePanel,
+    addBraveNewSettingsSidePanel,
     checkStorage,
   ]);
 } else {
@@ -76,5 +77,6 @@ if (isBrave()) {
   changeDuckduckGoTitle();
   addDuckDuckGoMailButton();
   checkStorage();
+  addDuckDuckNewSettings();
   observeDOMChanges([checkStorage]);
 }
