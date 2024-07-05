@@ -1,4 +1,6 @@
 export function addDuckDuckNewSettings() {
+  if (window.location.pathname !== "/settings") return;
+
   const settingsDrawer = document.querySelector(".set-head__menu");
   if (!settingsDrawer) return;
 
@@ -7,4 +9,16 @@ export function addDuckDuckNewSettings() {
   if (!widgetElement) return;
 
   widgetElement.innerHTML = "Custom";
+
+  if (window.location.hash === "#general" || window.location.hash === "") {
+    const settingsContent = document.querySelector(".frm") as HTMLFormElement;
+    console.log(settingsContent);
+    if (!settingsContent) return;
+
+    const newWidgetElement = document.createElement("div");
+    newWidgetElement.classList.add("frm__field");
+    newWidgetElement.classList.add("fix");
+
+    settingsContent.prepend(newWidgetElement);
+  }
 }

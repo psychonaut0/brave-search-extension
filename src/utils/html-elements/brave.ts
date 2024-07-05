@@ -28,7 +28,7 @@ export function braveButtonStyle(
   addButton.style.paddingBottom = "0.5rem";
   addButton.style.display = "flex";
   addButton.style.alignItems = "center";
-  addButton.style.gap = "0.5rem";
+  addButton.style.gap = "0.25rem";
   addButton.style.border = "none";
   addButton.style.borderRadius = "0.25rem";
   addButton.style.userSelect = "none";

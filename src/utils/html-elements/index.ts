@@ -33,6 +33,9 @@ export function htmlButton(
   // Create the icon element
   if (icon !== "") {
     const iconElement = document.createElement("div");
+    iconElement.style.display = "flex";
+    iconElement.style.alignItems = "center";
+    iconElement.style.justifyContent = "center";
     iconElement.innerHTML = icon;
     addButton.appendChild(iconElement);
   }

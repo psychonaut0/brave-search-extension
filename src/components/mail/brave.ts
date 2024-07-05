@@ -4,6 +4,8 @@ export function addBraveMailButton() {
   const settingsDiv: HTMLElement | null = document.querySelector("#settings");
 
   if (!settingsDiv) return;
+
+  settingsDiv.style.gap = "8px";
   addMailButton(settingsDiv);
 }
 

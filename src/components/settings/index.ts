@@ -1,6 +1,8 @@
+import { isBrave } from "../../utils/functions";
 import { htmlButton, htmlInput, htmlSelect } from "../../utils/html-elements";
 import { plusIcon, trashIcon } from "../../utils/icons";
 import { Email, Provider } from "../../utils/types";
+import { braveEmailElement } from "./brave";
 
 export function addMailSettings(content: HTMLElement) {
   const sectionElement = content.querySelector("section");
@@ -12,8 +14,9 @@ export function addMailSettings(content: HTMLElement) {
     content.innerHTML = "";
 
     // Remove all in the section element instead of div with class info
-    const info = newSectionElement.querySelector(".info");
+    const info = newSectionElement.querySelector(".info") as HTMLElement;
     if (info) {
+      info.style.width = "100%";
       newSectionElement.innerHTML = "";
       newSectionElement.appendChild(info);
     }
@@ -55,7 +58,7 @@ export function addMailSettings(content: HTMLElement) {
     emailListElement.classList.add("email-list");
     emailListElement.style.display = "flex";
     emailListElement.style.flexDirection = "column";
-    emailListElement.style.gap = "1rem";
+    emailListElement.style.gap = "0.75rem";
     emailListElement.style.marginBottom = "1rem";
     // Create the input element
     const inputElement = htmlInput();
@@ -97,39 +100,7 @@ export function addMailSettings(content: HTMLElement) {
     inputWrapper.style.gap = "0.5rem";
 
     const addButton = htmlButton("Add", plusIcon(), "primary", () => {
-      chrome.storage.local.get("emails", (data) => {
-        let emails = (data.emails as Email[]) || [];
-        const email = inputElement.value;
-        // Check if valid email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-          alert("Invalid email address");
-          return;
-        }
-
-        // Check if email already exists
-        if (emails.find((e) => e.email === email)) {
-          alert("Email already exists");
-          return;
-        }
-
-        if (emailProviderElement.value === "outlook") {
-          if (emails.find((e) => e.provider === "outlook")) {
-            alert("Only one Outlook email is allowed");
-            return;
-          }
-        }
-
-        if (email && !emails.find((e) => e.email === email)) {
-          emails.push({
-            email,
-            provider: emailProviderElement.value as Provider,
-          });
-          chrome.storage.local.set({ emails });
-        }
-
-        inputElement.value = "";
-      });
+      addEmail(inputElement, emailProviderElement);
     });
 
     // Append the input and button to the input wrapper
@@ -158,6 +129,53 @@ export function addMailSettings(content: HTMLElement) {
   }
 }
 
+export function addEmail(
+  inputElement: HTMLInputElement,
+  emailProviderElement: HTMLSelectElement
+) {
+  chrome.storage.local.get("emails", (data) => {
+    let emails = (data.emails as Email[]) || [];
+    const email = inputElement.value;
+    // Check if valid email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Invalid email address");
+      return;
+    }
+
+    // Check if email already exists
+    if (emails.find((e) => e.email === email)) {
+      alert("Email already exists");
+      return;
+    }
+
+    if (emailProviderElement.value === "outlook") {
+      if (emails.find((e) => e.provider === "outlook")) {
+        alert("Only one Outlook email is allowed");
+        return;
+      }
+    }
+
+    if (email && !emails.find((e) => e.email === email)) {
+      emails.push({
+        email,
+        provider: emailProviderElement.value as Provider,
+      });
+      chrome.storage.local.set({ emails });
+    }
+
+    inputElement.value = "";
+  });
+}
+
+export function deleteEmail(email: Email) {
+  chrome.storage.local.get("emails", (data) => {
+    const emails = (data.emails as Email[]) || [];
+    const newEmails = emails.filter((e) => e.email !== email.email);
+    chrome.storage.local.set({ emails: newEmails });
+  });
+}
+
 export function updateSettingsEmailsList() {
   const emailListElement = document.querySelector(".email-list");
 
@@ -169,35 +187,18 @@ export function updateSettingsEmailsList() {
       const emails = (data.emails as Email[]) || [];
 
       emails.forEach((email) => {
-        const emailElement = document.createElement("div");
-        emailElement.setAttribute("data-email", email.email);
-        emailElement.style.display = "flex";
-        emailElement.style.justifyContent = "space-between";
-        emailElement.style.alignItems = "center";
-        emailElement.style.width = "100%";
-        emailElement.style.gap = "0.5rem";
-        const emailText = document.createElement("span");
-        emailText.innerHTML = email.email;
-
-        const deleteButton = htmlButton("", trashIcon(), "danger", () => {
-          chrome.storage.local.get("emails", (data) => {
-            const emails = (data.emails as Email[]) || [];
-            const newEmails = emails.filter((e) => e.email !== email.email);
-            chrome.storage.local.set({ emails: newEmails });
-          });
-        });
-
-        // Append the email text and delete button to the email element if not already present
-
-        if (document.querySelector(`[data-email="${email.email}"]`)) {
-          return;
+        let emailElement: HTMLElement | undefined;
+        if (isBrave()) {
+          emailElement = braveEmailElement(email);
+        } else {
+          emailElement = document.createElement("div");
+          emailElement.setAttribute("data-email", email.email);
+          emailElement.innerHTML = email.email;
         }
 
-        emailElement.appendChild(emailText);
-        emailElement.appendChild(deleteButton);
-
-        // Append the email element to the email list element
-        emailListElement.appendChild(emailElement);
+        if (emailElement) {
+          emailListElement.appendChild(emailElement);
+        }
       });
     });
   }
