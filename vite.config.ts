@@ -19,7 +19,7 @@ export default defineConfig({
     react(),
     webExtension({
       webExtConfig: {
-        startUrl: ["https://search.brave.com/"],
+        startUrl: ["https://search.brave.com/", "https://duckduckgo.com/"],
         chromiumBinary: "/usr/bin/brave",
       },
       manifest: generateManifest,

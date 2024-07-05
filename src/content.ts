@@ -1,10 +1,13 @@
-import { replaceSettingsIcon } from "./components/general";
-import { replaceBraveToGoogleLogo } from "./components/general/brave";
+import {
+  replaceBraveToGoogleLogo,
+  replaceSettingsIcon,
+} from "./components/general/brave";
 import { replaceDuckDuckGoToGoogleLogo } from "./components/general/duckduckgo";
 import { replaceFavicon } from "./components/head";
 import { changeBraveTitle } from "./components/head/brave";
 import { changeDuckduckGoTitle } from "./components/head/duckduckgo";
-import { addMailButton } from "./components/mail";
+import { addBraveMailButton } from "./components/mail/brave";
+import { addDuckDuckGoMailButton } from "./components/mail/duckduckgo";
 import { checkStorage, observeDOMChanges } from "./components/observer";
 import {
   editSnippetDescription,
@@ -34,7 +37,7 @@ if (isBrave()) {
   removeElementByQuery(".waves-bottom");
   editSnippetDescription();
   moveVideoThumbnail();
-  addMailButton();
+  addBraveMailButton();
   replaceSettingsIcon();
   addNewSettingsSidePanel();
   checkStorage();
@@ -59,7 +62,7 @@ if (isBrave()) {
     removeElementByQuery.bind(null, ".waves-bottom"),
     moveVideoThumbnail,
     moveProductThumbnail,
-    addMailButton,
+    addBraveMailButton,
     replaceSettingsIcon,
     addNewSettingsSidePanel,
     checkStorage,
@@ -70,5 +73,6 @@ if (isBrave()) {
   removeElementByQuery(".homepage-cta-section_scrollCta__HuSCL");
   replaceFavicon();
   changeDuckduckGoTitle();
+  addDuckDuckGoMailButton();
   // observeDOMChanges([replaceDuckDuckGoToGoogleLogo]);
 }

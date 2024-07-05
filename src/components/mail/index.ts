@@ -1,63 +1,50 @@
-import { sha256 } from "../utils/functions";
-import { Email, Provider } from "../utils/types";
+import { sha256 } from "../../utils/functions";
+import { htmlButton } from "../../utils/html-elements";
+import { Email, Provider } from "../../utils/types";
 
-export async function addMailButton() {
-  const settingsDiv: HTMLElement | null = document.querySelector("#settings");
-
+export async function addMailButton(settingsDiv: HTMLElement | null) {
   if (settingsDiv && !settingsDiv.querySelector(".mail-button")) {
     settingsDiv.style.display = "flex";
 
     // Create mail button that shows a popup with the email addresses to choose from
-    const mailButton = document.createElement("div");
-    mailButton.className = "mail-button";
-    mailButton.style.display = "flex";
-    mailButton.style.alignItems = "center";
-    mailButton.style.justifyContent = "center";
-    mailButton.style.cursor = "pointer";
-    mailButton.style.borderRadius = "8px";
-    mailButton.style.paddingLeft = "12px";
-    mailButton.style.paddingRight = "12px";
-    mailButton.style.paddingTop = "6px";
-    mailButton.style.paddingBottom = "6px";
-    mailButton.style.backgroundColor = "#242731";
-    mailButton.style.marginRight = "10px";
-    mailButton.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
-    mailButton.style.color = "white";
-    mailButton.style.zIndex = "100";
-    mailButton.textContent = "Mail";
-    mailButton.style.userSelect = "none";
-    mailButton.onclick = () => {
-      if (document.querySelector(".email-popup")) {
-        document.querySelector<HTMLElement>(".email-popup")?.remove();
-        return;
-      }
-      const emailPopup = document.createElement("div");
-      emailPopup.className = "email-popup";
-      emailPopup.style.position = "absolute";
-      emailPopup.style.zIndex = "10000";
-      emailPopup.style.backgroundColor = "#242731";
-      emailPopup.style.borderRadius = "8px";
-      emailPopup.style.color = "white";
-      emailPopup.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
-      emailPopup.style.display = "flex";
-      emailPopup.style.flexDirection = "column";
-      emailPopup.style.padding = ".4rem";
-      emailPopup.style.minWidth = "350px";
+    const mailButton = htmlButton(
+      "Mail",
+      "",
+      "secondary",
+      () => {
+        if (document.querySelector(".email-popup")) {
+          document.querySelector<HTMLElement>(".email-popup")?.remove();
+          return;
+        }
+        const emailPopup = document.createElement("div");
+        emailPopup.className = "email-popup";
+        emailPopup.style.position = "absolute";
+        emailPopup.style.zIndex = "10000";
+        emailPopup.style.backgroundColor = "#242731";
+        emailPopup.style.borderRadius = "8px";
+        emailPopup.style.color = "white";
+        emailPopup.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
+        emailPopup.style.display = "flex";
+        emailPopup.style.flexDirection = "column";
+        emailPopup.style.padding = ".4rem";
+        emailPopup.style.minWidth = "350px";
 
-      updateEmailList();
+        updateEmailList();
 
-      // Position the popup on the top right corner if searchbar-home is present
-      const searchbarHome = document.querySelector("#searchbar-home");
-      if (searchbarHome) {
-        emailPopup.style.top = "75px";
-        emailPopup.style.right = "70px";
-      } else {
-        emailPopup.style.top = "74px";
-        emailPopup.style.right = "70px";
-      }
+        // Position the popup on the top right corner if searchbar-home is present
+        const searchbarHome = document.querySelector("#searchbar-home");
+        if (searchbarHome) {
+          emailPopup.style.top = "75px";
+          emailPopup.style.right = "70px";
+        } else {
+          emailPopup.style.top = "74px";
+          emailPopup.style.right = "70px";
+        }
 
-      document.body.appendChild(emailPopup);
-    };
+        searchbarHome?.appendChild(emailPopup);
+      },
+      "mail-button"
+    );
 
     // Close the popup when clicking outside of it
     document.body.onclick = (event) => {
