@@ -1,7 +1,9 @@
 import { replaceSettingsIcon } from "./components/general";
 import { replaceBraveToGoogleLogo } from "./components/general/brave";
 import { replaceDuckDuckGoToGoogleLogo } from "./components/general/duckduckgo";
-import { changeTitle, replaceFavicon } from "./components/head";
+import { replaceFavicon } from "./components/head";
+import { changeBraveTitle } from "./components/head/brave";
+import { changeDuckduckGoTitle } from "./components/head/duckduckgo";
 import { addMailButton } from "./components/mail";
 import { checkStorage, observeDOMChanges } from "./components/observer";
 import {
@@ -51,7 +53,7 @@ if (isBrave()) {
       "Customization panel"
     ),
     replaceFavicon,
-    changeTitle,
+    changeBraveTitle,
     editSnippetDescription,
     removeElementByQuery.bind(null, ".waves-top"),
     removeElementByQuery.bind(null, ".waves-bottom"),
@@ -66,5 +68,7 @@ if (isBrave()) {
   replaceDuckDuckGoToGoogleLogo();
   removeElementByQuery("#features");
   removeElementByQuery(".homepage-cta-section_scrollCta__HuSCL");
+  replaceFavicon();
+  changeDuckduckGoTitle();
   // observeDOMChanges([replaceDuckDuckGoToGoogleLogo]);
 }
