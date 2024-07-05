@@ -71,8 +71,10 @@ if (isBrave()) {
   replaceDuckDuckGoToGoogleLogo();
   removeElementByQuery("#features");
   removeElementByQuery(".homepage-cta-section_scrollCta__HuSCL");
+  removeElementByQuery(".header--aside__item");
   replaceFavicon();
   changeDuckduckGoTitle();
   addDuckDuckGoMailButton();
-  // observeDOMChanges([replaceDuckDuckGoToGoogleLogo]);
+  checkStorage();
+  observeDOMChanges([checkStorage]);
 }

@@ -19,7 +19,7 @@ export function htmlButton(
   const addButton = document.createElement("button");
 
   if (isBrave()) {
-    braveButtonStyle(addButton);
+    braveButtonStyle(addButton, variant);
   } else {
     duckDuckGoButtonStyle(addButton);
   }

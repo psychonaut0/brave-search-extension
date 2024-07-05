@@ -1,10 +1,14 @@
-import { sha256 } from "../../utils/functions";
+import { isBrave, sha256 } from "../../utils/functions";
 import { htmlButton } from "../../utils/html-elements";
 import { Email, Provider } from "../../utils/types";
+import { bravePopupPosition } from "./brave";
+import { duckDuckGoPopupPosition } from "./duckduckgo";
 
 export async function addMailButton(settingsDiv: HTMLElement | null) {
   if (settingsDiv && !settingsDiv.querySelector(".mail-button")) {
     settingsDiv.style.display = "flex";
+    settingsDiv.style.alignItems = "center";
+    settingsDiv.style.justifyContent = "flex-end";
 
     // Create mail button that shows a popup with the email addresses to choose from
     const mailButton = htmlButton(
@@ -12,36 +16,7 @@ export async function addMailButton(settingsDiv: HTMLElement | null) {
       "",
       "secondary",
       () => {
-        if (document.querySelector(".email-popup")) {
-          document.querySelector<HTMLElement>(".email-popup")?.remove();
-          return;
-        }
-        const emailPopup = document.createElement("div");
-        emailPopup.className = "email-popup";
-        emailPopup.style.position = "absolute";
-        emailPopup.style.zIndex = "10000";
-        emailPopup.style.backgroundColor = "#242731";
-        emailPopup.style.borderRadius = "8px";
-        emailPopup.style.color = "white";
-        emailPopup.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
-        emailPopup.style.display = "flex";
-        emailPopup.style.flexDirection = "column";
-        emailPopup.style.padding = ".4rem";
-        emailPopup.style.minWidth = "350px";
-
-        updateEmailList();
-
-        // Position the popup on the top right corner if searchbar-home is present
-        const searchbarHome = document.querySelector("#searchbar-home");
-        if (searchbarHome) {
-          emailPopup.style.top = "75px";
-          emailPopup.style.right = "70px";
-        } else {
-          emailPopup.style.top = "74px";
-          emailPopup.style.right = "70px";
-        }
-
-        searchbarHome?.appendChild(emailPopup);
+        showEmailPopup();
       },
       "mail-button"
     );
@@ -128,4 +103,33 @@ function getProviderHref(provider: Provider, email: string) {
     default:
       return "";
   }
+}
+
+function showEmailPopup() {
+  if (document.querySelector(".email-popup")) {
+    document.querySelector<HTMLElement>(".email-popup")?.remove();
+    return;
+  }
+  const emailPopup = document.createElement("div");
+  emailPopup.className = "email-popup";
+  emailPopup.style.position = "absolute";
+  emailPopup.style.zIndex = "10000";
+  emailPopup.style.backgroundColor = "#242731";
+  emailPopup.style.borderRadius = "8px";
+  emailPopup.style.color = "white";
+  emailPopup.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
+  emailPopup.style.display = "flex";
+  emailPopup.style.flexDirection = "column";
+  emailPopup.style.padding = ".4rem";
+  emailPopup.style.minWidth = "350px";
+
+  if (isBrave()) {
+    bravePopupPosition(emailPopup);
+  } else {
+    duckDuckGoPopupPosition(emailPopup);
+  }
+
+  updateEmailList();
+
+  document.body.appendChild(emailPopup);
 }
