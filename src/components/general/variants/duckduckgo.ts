@@ -1,7 +1,6 @@
 import { replaceToGoogleLogo } from "..";
 
 export function replaceDuckDuckGoToGoogleLogo() {
-  console.log("HERE");
   const duckduckgoLogo = document.querySelectorAll<HTMLImageElement>(
     'img[alt="DuckDuckGo Logo"]'
   );

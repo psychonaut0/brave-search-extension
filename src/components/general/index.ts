@@ -1,5 +1,3 @@
-import { settingsIcon } from "../../utils/icons";
-
 export function replaceToGoogleLogo(
   logoToReplace: NodeListOf<HTMLImageElement | HTMLSourceElement | HTMLElement>
 ) {

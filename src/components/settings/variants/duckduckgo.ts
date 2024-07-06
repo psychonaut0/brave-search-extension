@@ -17,7 +17,6 @@ export function addDuckDuckNewSettings() {
 
   if (window.location.hash === "#general" || window.location.hash === "") {
     const settingsContent = document.querySelector(".frm") as HTMLFormElement;
-    console.log(settingsContent);
     if (!settingsContent) return;
 
     const newWidgetElement = document.createElement("div");
