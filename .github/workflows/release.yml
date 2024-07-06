@@ -42,12 +42,18 @@ jobs:
 
       - name: Create new tag
         id: tag
-        run: |
-          VERSION=v${{ steps.get_version.outputs.VERSION }}
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git tag $VERSION
-          git push origin $VERSION
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const version = 'v' + '${{ steps.get_version.outputs.VERSION }}';
+            const { owner, repo } = context.repo;
+            await github.git.createRef({
+              owner,
+              repo,
+              ref: `refs/tags/${version}`,
+              sha: context.sha,
+            });
 
       - name: Create GitHub Release
         id: create_release
