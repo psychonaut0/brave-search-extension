@@ -1,3 +1,4 @@
+import { getProviderHref } from "..";
 import { isBrave, sha256 } from "../../../utils/functions";
 import { htmlButton } from "../../../utils/html-elements";
 import { Email, Provider } from "../../../utils/types";
@@ -60,23 +61,6 @@ export function updateEmailList() {
       );
     });
   });
-}
-
-function getProviderHref(provider: Provider, email: string) {
-  switch (provider) {
-    case "gmail":
-      return `https://mail.google.com/mail/u/${email}`;
-    case "outlook":
-      return `https://outlook.office365.com/mail/`;
-    case "yahoo":
-      return `https://mail.yahoo.com/`;
-    case "protonmail":
-      return `https://mail.protonmail.com/u/${email}`;
-    case "aruba":
-      return `https://webmail.aruba.it/`;
-    default:
-      return "";
-  }
 }
 
 async function emailElement(email: Email) {
