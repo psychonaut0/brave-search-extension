@@ -78,5 +78,5 @@ if (isBrave()) {
   addDuckDuckGoMailButton();
   checkStorage();
   addDuckDuckNewSettings();
-  observeDOMChanges([checkStorage]);
+  observeDOMChanges([checkStorage, addDuckDuckNewSettings]);
 }

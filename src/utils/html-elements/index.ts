@@ -1,6 +1,10 @@
 import { isBrave } from "../functions";
-import { braveButtonStyle } from "./brave";
-import { duckDuckGoButtonStyle } from "./duckduckgo";
+import { braveButtonStyle, braveInputStyle, braveSelectStyle } from "./brave";
+import {
+  duckDuckGoButtonStyle,
+  duckDuckGoInputStyle,
+  duckDuckGoSelectStyle,
+} from "./duckduckgo";
 
 interface SelectOption {
   value: string;
@@ -10,7 +14,7 @@ interface SelectOption {
 export function htmlButton(
   content: string,
   icon: string,
-  variant: "primary" | "secondary" | "danger" = "primary",
+  variant: "primary" | "secondary" | "basic" | "danger" = "primary",
   action: Function,
   className: string = ""
 ): HTMLButtonElement {
@@ -54,35 +58,31 @@ export function htmlButton(
   return addButton;
 }
 
-export function htmlInput(): HTMLInputElement {
-  // Create the input element
+export function htmlInput(
+  placeholder: string = "",
+  type: string = "text"
+): HTMLInputElement {
   const inputElement = document.createElement("input");
-  inputElement.type = "text";
-  inputElement.placeholder = "Email address";
-  inputElement.style.paddingLeft = "0.5rem";
-  inputElement.style.paddingRight = "0.5rem";
-  inputElement.style.paddingTop = "0.25rem";
-  inputElement.style.paddingBottom = "0.25rem";
-  inputElement.style.backgroundColor = "#242731";
-  inputElement.style.borderRadius = "0.25rem";
-  inputElement.style.border = "none";
+  inputElement.type = type;
+  inputElement.placeholder = placeholder;
+  if (isBrave()) {
+    braveInputStyle(inputElement);
+  } else {
+    duckDuckGoInputStyle(inputElement);
+  }
 
   return inputElement;
 }
 
 export function htmlSelect(options: SelectOption[]): HTMLSelectElement {
-  // Create the select element
   const selectElement = document.createElement("select");
-  selectElement.style.paddingLeft = "0.5rem";
-  selectElement.style.paddingRight = "0.5rem";
-  selectElement.style.paddingTop = "0.5rem";
-  selectElement.style.paddingBottom = "0.5rem";
-  selectElement.style.backgroundColor = "#242731";
-  selectElement.style.borderRadius = "0.25rem";
-  selectElement.style.border = "none";
-  selectElement.style.color = "#ffffff";
 
-  // Create the options
+  if (isBrave()) {
+    braveSelectStyle(selectElement);
+  } else {
+    duckDuckGoSelectStyle(selectElement);
+  }
+
   options.forEach((option) => {
     const optionElement = document.createElement("option");
     optionElement.value = option.value;

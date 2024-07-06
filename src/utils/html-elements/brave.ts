@@ -18,6 +18,10 @@ export function braveButtonStyle(
       backgroundColor: "#e83f39",
       hoverColor: "#b62b27",
     },
+    basic: {
+      backgroundColor: "transparent",
+      hoverColor: "#1a1d24",
+    },
   };
 
   addButton.style.paddingLeft = "0.5rem";
@@ -41,4 +45,25 @@ export function braveButtonStyle(
   addButton.addEventListener("mouseleave", () => {
     addButton.style.backgroundColor = variants[variant].backgroundColor;
   });
+}
+
+export function braveInputStyle(inputElement: HTMLInputElement) {
+  inputElement.style.paddingLeft = "0.5rem";
+  inputElement.style.paddingRight = "0.5rem";
+  inputElement.style.paddingTop = "0.25rem";
+  inputElement.style.paddingBottom = "0.25rem";
+  inputElement.style.backgroundColor = "#242731";
+  inputElement.style.borderRadius = "0.25rem";
+  inputElement.style.border = "none";
+}
+
+export function braveSelectStyle(selectElement: HTMLSelectElement) {
+  selectElement.style.paddingLeft = "0.5rem";
+  selectElement.style.paddingRight = "0.5rem";
+  selectElement.style.paddingTop = "0.5rem";
+  selectElement.style.paddingBottom = "0.5rem";
+  selectElement.style.backgroundColor = "#242731";
+  selectElement.style.borderRadius = "0.25rem";
+  selectElement.style.border = "none";
+  selectElement.style.color = "#ffffff";
 }
