@@ -8,6 +8,10 @@ export async function sha256(rawData: string | object) {
   return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+export function isBrave() {
+  return window.location.hostname === "search.brave.com";
+}
+
 export function removeElementByQuery(query: string) {
   const element = document.querySelectorAll(`${query}`);
   if (element) {
