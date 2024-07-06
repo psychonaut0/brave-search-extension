@@ -1,4 +1,5 @@
 import { addMailSettings, deleteEmail } from "..";
+import { emailOptions } from "../..";
 import { htmlButton } from "../../../../utils/html-elements";
 import { Email } from "../../../../utils/types";
 
@@ -49,6 +50,14 @@ export function duckDuckGoEmailElement(email: Email) {
   const emailText = document.createElement("span");
   emailText.innerHTML = email.email;
   emailElement.appendChild(emailText);
+
+  const emailProvider = document.createElement("span");
+  emailProvider.innerHTML = ` (${
+    emailOptions.find((option) => option.value === email.provider)?.label
+  })`;
+  emailProvider.style.color = "rgba(255, 255, 255, 0.4)";
+
+  emailText.appendChild(emailProvider);
 
   const deleteButton = htmlButton("Delete", "", "danger", () => {
     deleteEmail(email);
