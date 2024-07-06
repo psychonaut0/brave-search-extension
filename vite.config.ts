@@ -1,5 +1,4 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
 import webExtension, { readJsonFile } from "vite-plugin-web-extension";
 
 function generateManifest() {
@@ -8,21 +7,23 @@ function generateManifest() {
   return {
     name: pkg.name,
     description: pkg.description,
-    version: pkg.version,
     ...manifest,
+    version: pkg.version,
   };
 }
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
     webExtension({
       webExtConfig: {
-        startUrl: ["https://search.brave.com/"],
+        startUrl: ["https://search.brave.com/", "https://duckduckgo.com/"],
         chromiumBinary: "/usr/bin/brave",
       },
       manifest: generateManifest,
     }),
   ],
+  define: {
+    __APP_VERSION__: JSON.stringify(require("./package.json").version),
+  },
 });

@@ -1,36 +1,21 @@
-import { settingsIcon } from "../utils/icons";
+import { replaceToGoogleLogo } from "..";
+import { settingsIcon } from "../../../utils/icons";
 
-export function replaceBraveLogoToGoogleLogo() {
+export function replaceBraveToGoogleLogo() {
   const braveLogo = document.querySelectorAll<HTMLImageElement>("#logo img");
-  braveLogo.forEach((logo) => {
-    if (logo) {
-      logo.src =
-        "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png";
-      logo.style.height = "80px";
-    }
-  });
+  replaceToGoogleLogo(braveLogo);
 
   // Replace picture source scrset for the logo
   const braveLogoSrcset = document.querySelectorAll<HTMLSourceElement>(
     "#logo picture source"
   );
 
-  braveLogoSrcset.forEach((logo) => {
-    if (logo) {
-      logo.srcset =
-        "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png";
-    }
-  });
+  replaceToGoogleLogo(braveLogoSrcset);
 
   const braveNavLogo =
     document.querySelectorAll<HTMLImageElement>(".nav-logo img");
 
-  braveNavLogo.forEach((logo) => {
-    if (logo) {
-      logo.src =
-        "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png";
-    }
-  });
+  replaceToGoogleLogo(braveNavLogo);
 }
 
 export function replaceSettingsIcon() {

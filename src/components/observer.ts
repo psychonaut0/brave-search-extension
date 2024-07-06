@@ -1,5 +1,5 @@
-import { updateEmailList } from "./mail";
-import { updateSettingsEmailsList } from "./settings";
+import { updateEmailList } from "./email/email-popup";
+import { updateSettingsEmailsList } from "./email/email-settings";
 
 export function observeDOMChanges(operations: Function[]) {
   const targetNode = document.body;
@@ -28,8 +28,6 @@ export function observeDOMChanges(operations: Function[]) {
 }
 
 export function checkStorage() {
-  console.log("zanzan");
-
   chrome.storage.local.get("emails", (data) => {
     if (!data.emails) {
       chrome.storage.local.set({ emails: [] });
