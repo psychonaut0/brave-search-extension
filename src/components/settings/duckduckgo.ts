@@ -1,4 +1,6 @@
-import { addMailSettings } from ".";
+import { addMailSettings, deleteEmail } from ".";
+import { htmlButton } from "../../utils/html-elements";
+import { Email } from "../../utils/types";
 
 export function addDuckDuckNewSettings() {
   if (window.location.pathname !== "/settings") return;
@@ -35,4 +37,25 @@ export function addDuckDuckNewSettings() {
     settingsContent.prepend(separator);
     settingsContent.prepend(newWidgetElement);
   }
+}
+
+export function duckDuckGoEmailElement(email: Email) {
+  const emailElement = document.createElement("div");
+  emailElement.setAttribute("data-email", email.email);
+  emailElement.style.display = "flex";
+  emailElement.style.justifyContent = "space-between";
+  emailElement.style.alignItems = "center";
+  emailElement.style.width = "100%";
+  emailElement.style.gap = "0.5rem";
+  const emailText = document.createElement("span");
+  emailText.innerHTML = email.email;
+  emailElement.appendChild(emailText);
+
+  const deleteButton = htmlButton("Delete", "", "danger", () => {
+    deleteEmail(email);
+  });
+
+  emailElement.appendChild(deleteButton);
+
+  return emailElement;
 }

@@ -3,6 +3,7 @@ import { htmlButton, htmlInput, htmlSelect } from "../../utils/html-elements";
 import { plusIcon, trashIcon } from "../../utils/icons";
 import { Email, Provider } from "../../utils/types";
 import { braveEmailElement, braveEmailSettingsHeader } from "./brave";
+import { duckDuckGoEmailElement } from "./duckduckgo";
 
 export function addMailSettings(content: HTMLElement) {
   const sectionElement = content.querySelector("section");
@@ -63,9 +64,17 @@ export function addMailSettings(content: HTMLElement) {
     inputWrapper.style.width = "100%";
     inputWrapper.style.gap = "0.5rem";
 
-    const addButton = htmlButton("Add", plusIcon(), "primary", () => {
-      addEmail(inputElement, emailProviderElement);
-    });
+    let addButton: HTMLButtonElement;
+
+    if (isBrave()) {
+      addButton = htmlButton("Add", plusIcon(), "primary", () => {
+        addEmail(inputElement, emailProviderElement);
+      });
+    } else {
+      addButton = htmlButton("Add", "", "primary", () => {
+        addEmail(inputElement, emailProviderElement);
+      });
+    }
 
     // Append the input and button to the input wrapper
     inputWrapper.appendChild(inputElement);
@@ -155,9 +164,7 @@ export function updateSettingsEmailsList() {
         if (isBrave()) {
           emailElement = braveEmailElement(email);
         } else {
-          emailElement = document.createElement("div");
-          emailElement.setAttribute("data-email", email.email);
-          emailElement.innerHTML = email.email;
+          emailElement = duckDuckGoEmailElement(email);
         }
 
         if (emailElement) {
