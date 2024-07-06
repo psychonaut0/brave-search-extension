@@ -1,4 +1,4 @@
-import { replaceToGoogleLogo } from ".";
+import { replaceToGoogleLogo } from "..";
 
 export function replaceDuckDuckGoToGoogleLogo() {
   console.log("HERE");

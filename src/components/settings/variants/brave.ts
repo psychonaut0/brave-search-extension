@@ -1,7 +1,7 @@
-import { addMailSettings, deleteEmail } from ".";
-import { htmlButton } from "../../utils/html-elements";
-import { trashIcon } from "../../utils/icons";
-import { Email } from "../../utils/types";
+import { addMailSettings, deleteEmail } from "..";
+import { htmlButton } from "../../../utils/html-elements";
+import { trashIcon } from "../../../utils/icons";
+import { Email } from "../../../utils/types";
 
 export function addBraveNewSettingsSidePanel() {
   if (document.querySelector(".user-widget")) {

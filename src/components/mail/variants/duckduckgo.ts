@@ -1,4 +1,4 @@
-import { addMailButton } from ".";
+import { emailPopupButton } from "..";
 
 export function addDuckDuckGoMailButton() {
   const header = document.querySelector("header, #header");
@@ -7,7 +7,7 @@ export function addDuckDuckGoMailButton() {
   const settingsDiv = document.querySelector("section, .header--aside");
   if (!settingsDiv) return;
 
-  addMailButton(settingsDiv as HTMLElement);
+  emailPopupButton(settingsDiv as HTMLElement);
 }
 
 export function duckDuckGoPopupPosition(emailPopup: HTMLElement) {

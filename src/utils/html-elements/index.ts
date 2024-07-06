@@ -1,10 +1,14 @@
 import { isBrave } from "../functions";
-import { braveButtonStyle, braveInputStyle, braveSelectStyle } from "./brave";
+import {
+  braveButtonStyle,
+  braveInputStyle,
+  braveSelectStyle,
+} from "./variants/brave";
 import {
   duckDuckGoButtonStyle,
   duckDuckGoInputStyle,
   duckDuckGoSelectStyle,
-} from "./duckduckgo";
+} from "./variants/duckduckgo";
 
 interface SelectOption {
   value: string;

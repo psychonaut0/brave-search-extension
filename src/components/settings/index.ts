@@ -2,8 +2,8 @@ import { isBrave } from "../../utils/functions";
 import { htmlButton, htmlInput, htmlSelect } from "../../utils/html-elements";
 import { plusIcon, trashIcon } from "../../utils/icons";
 import { Email, Provider } from "../../utils/types";
-import { braveEmailElement, braveEmailSettingsHeader } from "./brave";
-import { duckDuckGoEmailElement } from "./duckduckgo";
+import { braveEmailElement, braveEmailSettingsHeader } from "./variants/brave";
+import { duckDuckGoEmailElement } from "./variants/duckduckgo";
 
 export function addMailSettings(content: HTMLElement) {
   const sectionElement = content.querySelector("section");

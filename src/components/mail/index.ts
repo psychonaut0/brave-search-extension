@@ -5,14 +5,14 @@ import {
   braveEmailElementStyle,
   bravePopupPosition,
   bravePopupStyle,
-} from "./brave";
+} from "./variants/brave";
 import {
   duckDuckGoEmailElementStyle,
   duckDuckGoPopupPosition,
   duckDuckGoPopupStyle,
-} from "./duckduckgo";
+} from "./variants/duckduckgo";
 
-export async function addMailButton(settingsDiv: HTMLElement | null) {
+export async function emailPopupButton(settingsDiv: HTMLElement | null) {
   if (settingsDiv && !settingsDiv.querySelector(".mail-button")) {
     settingsDiv.style.display = "flex";
     settingsDiv.style.alignItems = "center";
@@ -70,6 +70,10 @@ function getProviderHref(provider: Provider, email: string) {
       return `https://outlook.office365.com/mail/`;
     case "yahoo":
       return `https://mail.yahoo.com/`;
+    case "protonmail":
+      return `https://mail.protonmail.com/u/${email}`;
+    case "aruba":
+      return `https://webmail.aruba.it/`;
     default:
       return "";
   }

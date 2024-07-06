@@ -1,4 +1,4 @@
-import { addMailButton } from ".";
+import { emailPopupButton } from "..";
 
 export function addBraveMailButton() {
   const settingsDiv: HTMLElement | null = document.querySelector("#settings");
@@ -6,7 +6,7 @@ export function addBraveMailButton() {
   if (!settingsDiv) return;
 
   settingsDiv.style.gap = "8px";
-  addMailButton(settingsDiv);
+  emailPopupButton(settingsDiv);
 }
 
 export function bravePopupPosition(emailPopup: HTMLElement) {
