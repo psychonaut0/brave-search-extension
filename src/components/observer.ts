@@ -1,5 +1,5 @@
-import { updateEmailList } from "./mail";
-import { updateSettingsEmailsList } from "./settings";
+import { updateEmailList } from "./email/email-popup";
+import { updateSettingsEmailsList } from "./email/email-settings";
 
 export function observeDOMChanges(operations: Function[]) {
   const targetNode = document.body;

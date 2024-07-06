@@ -20,9 +20,9 @@ export function duckDuckGoButtonStyle(addButton: HTMLButtonElement) {
 export function duckDuckGoInputStyle(inputElement: HTMLInputElement) {
   inputElement.style.paddingLeft = "0.5rem";
   inputElement.style.paddingRight = "0.5rem";
-  inputElement.style.paddingTop = "0.5rem";
-  inputElement.style.paddingBottom = "0.5rem";
-  inputElement.style.borderRadius = "0.25rem";
+  inputElement.style.paddingTop = "0.625rem";
+  inputElement.style.paddingBottom = "0.625rem";
+  inputElement.style.borderRadius = "8px";
   inputElement.style.border = "none";
 
   inputElement.addEventListener("focus", () => {
@@ -39,9 +39,9 @@ export function duckDuckGoSelectStyle(selectElement: HTMLSelectElement) {
   selectElement.style.color = "#eeeeee";
   selectElement.style.paddingLeft = "0.5rem";
   selectElement.style.paddingRight = "0.5rem";
-  selectElement.style.paddingTop = "0.5rem";
-  selectElement.style.paddingBottom = "0.5rem";
-  selectElement.style.borderRadius = "0.25rem";
+  selectElement.style.paddingTop = "0.625rem";
+  selectElement.style.paddingBottom = "0.625rem";
+  selectElement.style.borderRadius = "8px";
   selectElement.style.border = "none";
 
   selectElement.addEventListener("focus", () => {

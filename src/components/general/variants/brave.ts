@@ -1,5 +1,5 @@
-import { replaceToGoogleLogo } from ".";
-import { settingsIcon } from "../../utils/icons";
+import { replaceToGoogleLogo } from "..";
+import { settingsIcon } from "../../../utils/icons";
 
 export function replaceBraveToGoogleLogo() {
   const braveLogo = document.querySelectorAll<HTMLImageElement>("#logo img");
