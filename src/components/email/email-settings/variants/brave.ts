@@ -1,7 +1,8 @@
 import { addMailSettings, deleteEmail } from "..";
-import { htmlButton } from "../../../utils/html-elements";
-import { trashIcon } from "../../../utils/icons";
-import { Email } from "../../../utils/types";
+import { emailOptions } from "../..";
+import { htmlButton } from "../../../../utils/html-elements";
+import { trashIcon } from "../../../../utils/icons";
+import { Email } from "../../../../utils/types";
 
 export function addBraveNewSettingsSidePanel() {
   if (document.querySelector(".user-widget")) {
@@ -91,8 +92,17 @@ export function braveEmailElement(email: Email) {
   emailElement.style.alignItems = "center";
   emailElement.style.width = "100%";
   emailElement.style.gap = "0.5rem";
+
   const emailText = document.createElement("span");
   emailText.innerHTML = email.email;
+
+  const emailProvider = document.createElement("span");
+  emailProvider.innerHTML = ` (${
+    emailOptions.find((option) => option.value === email.provider)?.label
+  })`;
+  emailProvider.style.color = "rgba(255, 255, 255, 0.4)";
+
+  emailText.appendChild(emailProvider);
 
   const deleteButton = htmlButton("", trashIcon(), "danger", () => {
     deleteEmail(email);

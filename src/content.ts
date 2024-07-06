@@ -6,8 +6,8 @@ import { replaceDuckDuckGoToGoogleLogo } from "./components/general/variants/duc
 import { replaceFavicon } from "./components/head";
 import { changeBraveTitle } from "./components/head/variants/brave";
 import { changeDuckduckGoTitle } from "./components/head/variants/duckduckgo";
-import { addBraveMailButton } from "./components/mail/variants/brave";
-import { addDuckDuckGoMailButton } from "./components/mail/variants/duckduckgo";
+import { addBraveMailButton } from "./components/email/email-popup/variants/brave";
+import { addDuckDuckGoMailButton } from "./components/email/email-popup/variants/duckduckgo";
 import { checkStorage, observeDOMChanges } from "./components/observer";
 import {
   editSnippetDescription,
@@ -15,8 +15,8 @@ import {
   moveVideoThumbnail,
   removeBorderFromSearchResults,
 } from "./components/search-result";
-import { addBraveNewSettingsSidePanel } from "./components/settings/variants/brave";
-import { addDuckDuckNewSettings } from "./components/settings/variants/duckduckgo";
+import { addBraveNewSettingsSidePanel } from "./components/email/email-settings/variants/brave";
+import { addDuckDuckNewSettings } from "./components/email/email-settings/variants/duckduckgo";
 import { addCssColorVariables } from "./components/stylesheets";
 import {
   isBrave,

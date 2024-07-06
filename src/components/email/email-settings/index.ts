@@ -1,7 +1,12 @@
-import { isBrave } from "../../utils/functions";
-import { htmlButton, htmlInput, htmlSelect } from "../../utils/html-elements";
-import { plusIcon, trashIcon } from "../../utils/icons";
-import { Email, Provider } from "../../utils/types";
+import { emailOptions, isUniqueProvider } from "..";
+import { isBrave } from "../../../utils/functions";
+import {
+  htmlButton,
+  htmlInput,
+  htmlSelect,
+} from "../../../utils/html-elements";
+import { plusIcon } from "../../../utils/icons";
+import { Email, Provider } from "../../../utils/types";
 import { braveEmailElement, braveEmailSettingsHeader } from "./variants/brave";
 import { duckDuckGoEmailElement } from "./variants/duckduckgo";
 
@@ -29,20 +34,7 @@ export function addMailSettings(content: HTMLElement) {
     const inputElement = htmlInput("Email Address");
     inputElement.style.width = "70%";
 
-    const emailProviderElement = htmlSelect([
-      {
-        value: "gmail",
-        label: "Gmail",
-      },
-      {
-        value: "outlook",
-        label: "Outlook",
-      },
-      {
-        value: "yahoo",
-        label: "Yahoo",
-      },
-    ]);
+    const emailProviderElement = htmlSelect(emailOptions);
 
     emailProviderElement.style.width = "30%";
 
@@ -122,11 +114,9 @@ export function addEmail(
       return;
     }
 
-    if (emailProviderElement.value === "outlook") {
-      if (emails.find((e) => e.provider === "outlook")) {
-        alert("Only one Outlook email is allowed");
-        return;
-      }
+    if (isUniqueProvider(emails, emailProviderElement.value as Provider)) {
+      alert(`Only one ${emailProviderElement.value} email is allowed`);
+      return;
     }
 
     if (email && !emails.find((e) => e.email === email)) {

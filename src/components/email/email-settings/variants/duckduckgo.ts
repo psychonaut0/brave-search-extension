@@ -1,6 +1,6 @@
 import { addMailSettings, deleteEmail } from "..";
-import { htmlButton } from "../../../utils/html-elements";
-import { Email } from "../../../utils/types";
+import { htmlButton } from "../../../../utils/html-elements";
+import { Email } from "../../../../utils/types";
 
 export function addDuckDuckNewSettings() {
   if (window.location.pathname !== "/settings") return;

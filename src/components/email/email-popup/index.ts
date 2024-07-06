@@ -1,6 +1,6 @@
-import { isBrave, sha256 } from "../../utils/functions";
-import { htmlButton } from "../../utils/html-elements";
-import { Email, Provider } from "../../utils/types";
+import { isBrave, sha256 } from "../../../utils/functions";
+import { htmlButton } from "../../../utils/html-elements";
+import { Email, Provider } from "../../../utils/types";
 import {
   braveEmailElementStyle,
   bravePopupPosition,
