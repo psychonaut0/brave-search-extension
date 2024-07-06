@@ -1,4 +1,4 @@
-name: Build and release
+name: Build and publish artifacts
 
 on:
   pull_request:
@@ -38,8 +38,14 @@ jobs:
       - name: Run packaging script
         run: bash scripts/crxmake.sh dist dist.pem
 
-      - name: Upload the artifact
+      - name: Upload the build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: source-zip
+          name: source
           path: source.zip
+
+      - name: Upload the crx file
+        uses: actions/upload-artifact@v3
+        with:
+          name: extension
+          path: dist.crx

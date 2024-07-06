@@ -1,0 +1,83 @@
+name: Create Release and Upload Artifacts
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "21"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build the project
+        run: pnpm build
+
+      - name: Zip the build folder
+        run: zip -r source.zip dist
+
+      - name: Create secret file
+        run: echo "${{ secrets.CRX_SECRET_KEY }}" > dist.pem
+
+      - name: Run packaging script
+        run: bash scripts/crxmake.sh dist dist.pem
+
+      - name: Get the version from package.json
+        id: get_version
+        run: echo ::set-output name=VERSION::$(node -p -e "require('./package.json').version")
+
+      - name: Create new tag
+        id: tag
+        run: |
+          VERSION=v${{ steps.get_version.outputs.VERSION }}
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git tag $VERSION
+          git push origin $VERSION
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: |
+            Release of version ${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+
+      - name: Upload source.zip to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./source.zip
+          asset_name: source.zip
+          asset_content_type: application/zip
+
+      - name: Upload CRX file to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist.crx
+          asset_name: extension.crx
+          asset_content_type: application/x-chrome-extension
