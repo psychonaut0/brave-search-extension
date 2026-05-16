@@ -1,4 +1,4 @@
-import { emailOptions, isUniqueProvider } from "..";
+import { emailOptions, isProviderAtLimit } from "..";
 import { isBrave } from "../../../utils/functions";
 import {
   htmlButton,
@@ -85,13 +85,18 @@ export function addMailSettings(content: HTMLElement) {
     // Append the new section element to the content after the h1
     content.appendChild(newSectionElement);
 
-    // Listen for storage changes to update the email list
-    chrome.storage.onChanged.addListener((changes) => {
-      if (changes.emails) {
-        updateSettingsEmailsList();
-      }
-    });
+    registerEmailStorageListener();
   }
+}
+
+let emailStorageListenerRegistered = false;
+
+function registerEmailStorageListener() {
+  if (emailStorageListenerRegistered) return;
+  emailStorageListenerRegistered = true;
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes.emails) updateSettingsEmailsList();
+  });
 }
 
 export function addEmail(
@@ -114,7 +119,7 @@ export function addEmail(
       return;
     }
 
-    if (isUniqueProvider(emails, emailProviderElement.value as Provider)) {
+    if (isProviderAtLimit(emails, emailProviderElement.value as Provider)) {
       alert(`Only one ${emailProviderElement.value} email is allowed`);
       return;
     }

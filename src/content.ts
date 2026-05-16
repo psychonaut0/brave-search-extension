@@ -13,7 +13,6 @@ import {
   editSnippetDescription,
   moveProductThumbnail,
   moveVideoThumbnail,
-  removeBorderFromSearchResults,
 } from "./components/search-result";
 import { addBraveNewSettingsSidePanel } from "./components/email/email-settings/variants/brave";
 import { addDuckDuckNewSettings } from "./components/email/email-settings/variants/duckduckgo";
@@ -24,33 +23,25 @@ import {
   replaceElementTextByClassName,
 } from "./utils/functions";
 
-if (isBrave()) {
-  replaceBraveToGoogleLogo();
-  removeElementByQuery(".subutton-wrapper");
-  removeElementByQuery("footer");
-  removeBorderFromSearchResults();
-  removeElementByQuery(".llm.suggestion");
-  removeElementByQuery(".premium-cta");
-  removeElementByQuery(".widget");
-  addCssColorVariables();
-  replaceFavicon();
-  removeElementByQuery(".waves-top");
-  removeElementByQuery(".waves-bottom");
-  editSnippetDescription();
-  moveVideoThumbnail();
-  addBraveMailButton();
-  replaceSettingsIcon();
-  addBraveNewSettingsSidePanel();
-  checkStorage();
+function runAll(ops: Array<() => void>) {
+  for (const op of ops) {
+    try {
+      op();
+    } catch (error) {
+      console.error("Error executing operation:", error);
+    }
+  }
+}
 
-  observeDOMChanges([
+if (isBrave()) {
+  addCssColorVariables();
+
+  const braveOps: Array<() => void> = [
     removeElementByQuery.bind(null, ".subutton-wrapper"),
     removeElementByQuery.bind(null, "footer"),
     replaceBraveToGoogleLogo,
-    removeBorderFromSearchResults,
     removeElementByQuery.bind(null, ".llm.suggestion"),
     removeElementByQuery.bind(null, ".premium-cta"),
-    // removeElementByQuery.bind(null, ".widget"),
     replaceElementTextByClassName.bind(
       null,
       ".settings-header-text",
@@ -67,16 +58,23 @@ if (isBrave()) {
     replaceSettingsIcon,
     addBraveNewSettingsSidePanel,
     checkStorage,
-  ]);
+  ];
+
+  runAll(braveOps);
+  observeDOMChanges(braveOps);
 } else {
-  replaceDuckDuckGoToGoogleLogo();
-  removeElementByQuery("#features");
-  removeElementByQuery(".homepage-cta-section_scrollCta__HuSCL");
-  removeElementByQuery(".header--aside__item");
-  replaceFavicon();
-  changeDuckduckGoTitle();
-  addDuckDuckGoMailButton();
-  checkStorage();
-  addDuckDuckNewSettings();
+  const ddgOps: Array<() => void> = [
+    replaceDuckDuckGoToGoogleLogo,
+    removeElementByQuery.bind(null, "#features"),
+    removeElementByQuery.bind(null, ".homepage-cta-section_scrollCta__HuSCL"),
+    removeElementByQuery.bind(null, ".header--aside__item"),
+    replaceFavicon,
+    changeDuckduckGoTitle,
+    addDuckDuckGoMailButton,
+    addDuckDuckNewSettings,
+    checkStorage,
+  ];
+
+  runAll(ddgOps);
   observeDOMChanges([checkStorage, addDuckDuckNewSettings]);
 }

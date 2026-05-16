@@ -17,11 +17,12 @@ export function getProviderHref(provider: Provider, email: string) {
   }
 }
 
-// Check if the provider is allowed to have multiple emails
-export function isUniqueProvider(emails: Email[], provider: Provider) {
-  const uniqueProviders: Provider[] = ["outlook", "aruba"];
+// Providers that only allow one email at a time (web UI is single-account).
+const SINGLE_ACCOUNT_PROVIDERS: Provider[] = ["outlook", "aruba"];
+
+export function isProviderAtLimit(emails: Email[], provider: Provider) {
   return (
-    uniqueProviders.includes(provider) &&
+    SINGLE_ACCOUNT_PROVIDERS.includes(provider) &&
     emails.some((email) => email.provider === provider)
   );
 }

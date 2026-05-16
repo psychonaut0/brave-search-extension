@@ -1,6 +1,7 @@
 export function changeDuckduckGoTitle() {
-  document.title = document.title
+  const next = document.title
     .replace("DuckDuckGo", "Google")
     .replace("— Privacy, simplified.", "")
     .replace("at", "-");
+  if (next !== document.title) document.title = next;
 }

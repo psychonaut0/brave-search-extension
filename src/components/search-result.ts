@@ -37,100 +37,74 @@ function addPlayIconToAnchor(anchorElement: HTMLElement) {
   anchorElement.appendChild(overlayDiv);
 }
 
+function pinImageSrc(img: HTMLImageElement, src: string) {
+  img.src = src;
+  // Brave/DDG sometimes re-set the src after our initial swap; observe just
+  // that one <img> to keep it pinned. Marker attribute prevents stacking
+  // observers across observer-loop ticks.
+  if (img.dataset.srcPinned === "1") return;
+  img.dataset.srcPinned = "1";
+
+  const obs = new MutationObserver(() => {
+    if (img.src !== src) img.src = src;
+  });
+  obs.observe(img, { attributes: true, attributeFilter: ["src"] });
+}
+
 export function moveVideoThumbnail() {
-  const snippets = document.querySelectorAll('.snippet[data-type="web"]');
+  const snippets = document.querySelectorAll<HTMLElement>(
+    '.snippet[data-type="web"]:not([data-video-thumb-moved])'
+  );
 
   snippets.forEach((snippet) => {
     const anchorElement = snippet.querySelector<HTMLAnchorElement>("a[srp-el-jm-ea]");
     const videoThumbElement = snippet.querySelector(".video-thumb");
+    if (!anchorElement || !videoThumbElement) return;
 
-    if (anchorElement && videoThumbElement) {
-      const videoThumbImg = videoThumbElement.querySelector("img");
-      const anchorImg = anchorElement.querySelector("img");
+    const videoThumbImg = videoThumbElement.querySelector("img");
+    const anchorImg = anchorElement.querySelector("img");
+    if (!videoThumbImg || !anchorImg) return;
 
-      if (videoThumbImg && anchorImg) {
-        const videoThumbSrc = videoThumbImg.src;
-
-        const updateImageSrc = () => {
-          anchorImg.src = videoThumbSrc;
-        };
-
-        updateImageSrc();
-
-        const observer = new MutationObserver(() => {
-          if (anchorImg.src !== videoThumbSrc) {
-            updateImageSrc();
-          }
-        });
-
-        observer.observe(anchorImg, {
-          attributes: true,
-          attributeFilter: ["src"],
-        });
-
-        addPlayIconToAnchor(anchorElement);
-        anchorImg.style.border = "1px solid #21272a";
-        videoThumbElement.remove();
-      }
-    }
+    pinImageSrc(anchorImg, videoThumbImg.src);
+    addPlayIconToAnchor(anchorElement);
+    videoThumbElement.remove();
+    snippet.dataset.videoThumbMoved = "1";
   });
 }
 
 export function moveProductThumbnail() {
-  const snippets = document.querySelectorAll('.snippet[data-type="web"]');
+  const snippets = document.querySelectorAll<HTMLElement>(
+    '.snippet[data-type="web"]:not([data-product-thumb-moved])'
+  );
+
   snippets.forEach((snippet) => {
     const anchorElement = snippet.querySelector("a[srp-el-jm-ea]");
     const productThumbElement = snippet.querySelector(".product");
+    if (!anchorElement || !productThumbElement) return;
 
-    if (anchorElement && productThumbElement) {
-      // Get the div with the background image that has thumb class
-      const productThumbDiv = productThumbElement.querySelector<HTMLElement>(".thumb");
+    const productThumbDiv = productThumbElement.querySelector<HTMLElement>(".thumb");
+    if (!productThumbDiv) return;
 
-      if (productThumbDiv) {
-        const productThumbSrc = productThumbDiv.style.backgroundImage
-          .replace('url("', "")
-          .replace('")', "");
+    const productThumbSrc = productThumbDiv.style.backgroundImage
+      .replace('url("', "")
+      .replace('")', "");
 
-        const anchorImg = anchorElement.querySelector("img");
+    const anchorImg = anchorElement.querySelector("img");
+    if (!anchorImg) return;
 
-        if (anchorImg) {
-          const updateImageSrc = () => {
-            anchorImg.src = productThumbSrc;
-          };
-
-          updateImageSrc();
-
-          const observer = new MutationObserver(() => {
-            if (anchorImg.src !== productThumbSrc) {
-              updateImageSrc();
-            }
-          });
-
-          observer.observe(anchorImg, {
-            attributes: true,
-            attributeFilter: ["src"],
-          });
-
-          anchorImg.style.border = "1px solid #21272a";
-          productThumbDiv.parentElement?.remove();
-        }
-      }
-    }
-  });
-}
-
-export function removeBorderFromSearchResults() {
-  const searchResults = document.querySelectorAll<HTMLElement>(".snippet[data-type]");
-  searchResults.forEach((result) => {
-    result.style.border = "1px solid transparent";
+    pinImageSrc(anchorImg, productThumbSrc);
+    productThumbDiv.parentElement?.remove();
+    snippet.dataset.productThumbMoved = "1";
   });
 }
 
 export function editSnippetDescription() {
-  const searchResults = document.querySelectorAll(".snippet-description");
+  const snippets = document.querySelectorAll<HTMLElement>(
+    ".snippet-description:not([data-edited])"
+  );
 
-  searchResults.forEach((result) => {
-    if (result.childNodes[0].nodeType === Node.TEXT_NODE) {
+  snippets.forEach((result) => {
+    if (result.childNodes[0]?.nodeType === Node.TEXT_NODE) {
       const span = document.createElement("span");
       span.style.opacity = "0.7";
       span.textContent = result.childNodes[0].nodeValue;
@@ -141,5 +115,7 @@ export function editSnippetDescription() {
     if (words.length > 25) {
       result.innerHTML = words.slice(0, 25).join(" ") + "...";
     }
+
+    result.dataset.edited = "1";
   });
 }

@@ -13,13 +13,27 @@ import {
   duckDuckGoPopupStyle,
 } from "./variants/duckduckgo";
 
+let outsideClickListenerRegistered = false;
+
+function registerOutsideClickListener() {
+  if (outsideClickListenerRegistered) return;
+  outsideClickListenerRegistered = true;
+  document.body.addEventListener("click", (event) => {
+    if (
+      !(event.target instanceof Element) ||
+      !event.target.classList.contains("mail-button")
+    ) {
+      document.querySelector(".email-popup")?.remove();
+    }
+  });
+}
+
 export async function emailPopupButton(settingsDiv: HTMLElement | null) {
   if (settingsDiv && !settingsDiv.querySelector(".mail-button")) {
     settingsDiv.style.display = "flex";
     settingsDiv.style.alignItems = "center";
     settingsDiv.style.justifyContent = "flex-end";
 
-    // Create mail button that shows a popup with the email addresses to choose from
     const mailButton = htmlButton(
       "Mail",
       "",
@@ -30,18 +44,7 @@ export async function emailPopupButton(settingsDiv: HTMLElement | null) {
       "mail-button"
     );
 
-    // Close the popup when clicking outside of it
-    document.body.onclick = (event) => {
-      if (
-        !(event.target instanceof Element) ||
-        !event.target.classList.contains("mail-button")
-      ) {
-        const emailPopup = document.querySelector(".email-popup");
-        if (emailPopup) {
-          emailPopup.remove();
-        }
-      }
-    };
+    registerOutsideClickListener();
 
     settingsDiv.insertBefore(mailButton, settingsDiv.firstChild);
   }
