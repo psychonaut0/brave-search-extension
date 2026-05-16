@@ -7,7 +7,7 @@ on:
       - develop
 
 jobs:
-  build-and-zip:
+  build:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
@@ -15,37 +15,43 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "21"
-
-      - name: Install pnpm
-        run: npm install -g pnpm
+          bun-version: latest
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install --frozen-lockfile
 
-      - name: Build the project
-        run: pnpm build
+      - name: Build Chrome and Firefox bundles
+        run: bun run build:all
 
-      - name: Zip the build folder
-        run: zip -r source.zip dist
+      - name: Zip Chrome bundle
+        run: cd dist/chrome && zip -r ../../chrome.zip . && cd ../..
 
-      - name: Create secret file
-        run: echo "${{ secrets.CRX_SECRET_KEY }}" > dist.pem
+      - name: Zip Firefox bundle
+        run: cd dist/firefox && zip -r ../../firefox.zip . && cd ../..
 
-      - name: Run packaging script
-        run: bash scripts/crxmake.sh dist dist.pem
+      - name: Pack CRX (signed Chromium install)
+        run: |
+          echo "${{ secrets.CRX_SECRET_KEY }}" > dist.pem
+          bash scripts/crxmake.sh dist/chrome dist.pem
+          mv chrome.crx extension.crx
 
-      - name: Upload the build artifact
+      - name: Upload Chrome zip
         uses: actions/upload-artifact@v4
         with:
-          name: source
-          path: source.zip
+          name: chrome
+          path: chrome.zip
 
-      - name: Upload the crx file
+      - name: Upload Firefox zip
         uses: actions/upload-artifact@v4
         with:
-          name: extension
-          path: dist.crx
+          name: firefox
+          path: firefox.zip
+
+      - name: Upload CRX
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-crx
+          path: extension.crx

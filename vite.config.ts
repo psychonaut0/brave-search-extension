@@ -12,9 +12,16 @@ function generateManifest() {
   };
 }
 
+const target = process.env.TARGET === "firefox" ? "firefox" : "chrome";
+
 export default defineConfig({
+  build: {
+    outDir: `dist/${target}`,
+    emptyOutDir: true,
+  },
   plugins: [
     webExtension({
+      browser: target,
       webExtConfig: {
         startUrl: ["https://search.brave.com/", "https://duckduckgo.com/"],
         chromiumBinary: "/usr/bin/brave",

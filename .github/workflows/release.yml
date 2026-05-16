@@ -6,69 +6,53 @@ on:
       - master
 
 jobs:
-  create-release:
+  release:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "21"
-
-      - name: Install pnpm
-        run: npm install -g pnpm
+          bun-version: latest
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install --frozen-lockfile
 
-      - name: Build the project
-        run: pnpm build
+      - name: Build Chrome and Firefox bundles
+        run: bun run build:all
 
-      - name: Zip the build folder
-        run: zip -r source.zip dist
+      - name: Get version
+        id: version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 
-      - name: Create secret file
-        run: echo "${{ secrets.CRX_SECRET_KEY }}" > dist.pem
+      - name: Zip Chrome bundle
+        run: cd dist/chrome && zip -r ../../chrome.zip . && cd ../..
 
-      - name: Run packaging script
-        run: bash scripts/crxmake.sh dist dist.pem
+      - name: Zip Firefox bundle
+        run: cd dist/firefox && zip -r ../../firefox.zip . && cd ../..
 
-      - name: Get the version from package.json
-        id: get_version
-        run: echo ::set-output name=VERSION::$(node -p -e "require('./package.json').version")
+      - name: Pack CRX
+        run: |
+          echo "${{ secrets.CRX_SECRET_KEY }}" > dist.pem
+          bash scripts/crxmake.sh dist/chrome dist.pem
+          mv chrome.crx extension.crx
 
       - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.get_version.outputs.VERSION }}
-          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          tag_name: v${{ steps.version.outputs.VERSION }}
+          name: Release ${{ steps.version.outputs.VERSION }}
           body: |
-            Release of version ${{ steps.get_version.outputs.VERSION }}
-          draft: false
-          prerelease: false
+            ## Install
 
-      - name: Upload source.zip to release
-        uses: actions/upload-release-asset@v1
+            - **Chrome / Brave / any Chromium**: download `extension.crx` and drag it onto `chrome://extensions` (with Developer mode on), or unzip `chrome.zip` and use "Load unpacked".
+            - **Firefox**: install `firefox.zip` via `about:debugging` → "Load Temporary Add-on" (pick the manifest), or sign it for permanent install.
+          files: |
+            chrome.zip
+            firefox.zip
+            extension.crx
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./source.zip
-          asset_name: source.zip
-          asset_content_type: application/zip
-
-      - name: Upload CRX file to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist.crx
-          asset_name: extension.crx
-          asset_content_type: application/x-chrome-extension

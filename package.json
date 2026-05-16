@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:firefox": "tsc && vite build -- --browser=firefox"
+    "build:firefox": "tsc && TARGET=firefox vite build",
+    "build:all": "bun run build && bun run build:firefox"
   },
   "dependencies": {
     "@types/chrome": "^0.0.268"

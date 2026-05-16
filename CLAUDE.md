@@ -4,16 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-Package manager is **pnpm** (matches CI).
+Package manager is **bun** (matches CI). `vite.config.ts` is loaded as ESM — keep imports ESM, no `require()`.
 
-- `pnpm dev` — runs Vite via `vite-plugin-web-extension`. The plugin loads the extension into Brave (`chromiumBinary: /usr/bin/brave` in `vite.config.ts`) and auto-opens `search.brave.com` and `duckduckgo.com`. Hardcoded Linux path; edit `vite.config.ts` on other OSes.
-- `pnpm build` — runs `tsc` (type-check only, `noEmit: true`) then `vite build`. Output goes to `dist/`. Type errors fail the build.
+- `bun install` — install deps
+- `bun run dev` — runs Vite via `vite-plugin-web-extension`. The plugin loads the extension into Brave (`chromiumBinary: /usr/bin/brave` in `vite.config.ts`) and auto-opens `search.brave.com` and `duckduckgo.com`. Hardcoded Linux path; edit `vite.config.ts` on other OSes.
+- `bun run build` — runs `tsc` (type-check only, `noEmit: true`) then `vite build` for the **Chromium** target. Output goes to `dist/chrome/`. Type errors fail the build.
+- `bun run build:firefox` — same flow, but with `TARGET=firefox` set so the plugin picks the `{{firefox}}.` manifest entries. Output goes to `dist/firefox/`.
+- `bun run build:all` — runs both. CI uses this.
 - No tests, no linter configured.
 
 Local packaging into a `.crx` (mirrors CI):
 ```
-zip -r source.zip dist
-bash scripts/crxmake.sh dist path/to/key.pem
+bash scripts/crxmake.sh dist/chrome path/to/key.pem
 ```
 
 ## Architecture
@@ -21,7 +23,7 @@ bash scripts/crxmake.sh dist path/to/key.pem
 This is a **content-script-only** WebExtension that mutates the DOM of `search.brave.com` and `duckduckgo.com` to reskin them. `background.ts` is a stub (logs `onInstalled`); there is no popup or options page — settings UI is injected directly into the host site's own settings panel.
 
 ### Manifest is templated, not static
-`src/manifest.json` uses `{{chrome}}.` / `{{firefox}}.` prefixes consumed by `vite-plugin-web-extension` to emit per-browser manifests at build time. Both targets currently declare `manifest_version: 2`. The plugin also merges `name`, `description`, and `version` from `package.json` (see `generateManifest` in `vite.config.ts`) — bump the version in `package.json`, not the manifest.
+`src/manifest.json` uses `{{chrome}}.` / `{{firefox}}.` prefixes consumed by `vite-plugin-web-extension` to emit per-browser manifests at build time. Both targets currently declare `manifest_version: 2`. The plugin also merges `name`, `description`, and `version` from `package.json` (see `generateManifest` in `vite.config.ts`) — bump the version in `package.json`, not the manifest. Target is selected by the `TARGET` env var read in `vite.config.ts` (`TARGET=firefox` → `dist/firefox/`, anything else → `dist/chrome/`).
 
 ### Single entry point branches on host
 `src/content.ts` is the only injected script. It calls `isBrave()` (checks `window.location.hostname === "search.brave.com"`) and runs a different sequence of mutators for each site. Both branches end by registering operations with `observeDOMChanges(...)`.
@@ -47,7 +49,12 @@ The only persistent state is a list of `Email` records (`{ email, provider }`) i
 
 ## CI / release flow
 
-- `.github/workflows/build.yml`: on PR merge into `develop`, builds and uploads `source.zip` + `dist.crx` as artifacts.
-- `.github/workflows/release.yml`: on push to `master`, builds, packs the CRX with `secrets.CRX_SECRET_KEY`, and creates a GitHub Release tagged `v<package.json version>`.
+Both workflows install with `bun install --frozen-lockfile` and run `bun run build:all`, then publish three drop-in artifacts:
+- `chrome.zip` — unpacked Chromium build, "Load unpacked" in `chrome://extensions`
+- `firefox.zip` — unpacked Firefox build, loadable via `about:debugging`
+- `extension.crx` — signed Chromium install, drag-and-drop onto `chrome://extensions`
 
-So the release flow is: bump `version` in `package.json` → merge to `develop` (artifacts) → merge `develop` to `master` (tagged release). Don't tag manually; the workflow does it from `package.json`.
+- `.github/workflows/build.yml`: on PR merge into `develop`, uploads all three as workflow artifacts.
+- `.github/workflows/release.yml`: on push to `master`, creates a GitHub Release tagged `v<package.json version>` and attaches all three files.
+
+Release flow: bump `version` in `package.json` → merge to `develop` (artifacts) → merge `develop` to `master` (tagged release). Don't tag manually; the workflow does it from `package.json`.
