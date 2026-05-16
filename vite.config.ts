@@ -1,9 +1,9 @@
 import { defineConfig } from "vite";
 import webExtension, { readJsonFile } from "vite-plugin-web-extension";
+import pkg from "./package.json" with { type: "json" };
 
 function generateManifest() {
   const manifest = readJsonFile("src/manifest.json");
-  const pkg = readJsonFile("package.json");
   return {
     name: pkg.name,
     description: pkg.description,
@@ -12,7 +12,6 @@ function generateManifest() {
   };
 }
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     webExtension({
@@ -24,6 +23,6 @@ export default defineConfig({
     }),
   ],
   define: {
-    __APP_VERSION__: JSON.stringify(require("./package.json").version),
+    __APP_VERSION__: JSON.stringify(pkg.version),
   },
 });
