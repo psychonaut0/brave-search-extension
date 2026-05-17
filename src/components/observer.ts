@@ -1,45 +1,47 @@
 import { updateEmailList } from "./email/email-popup";
 import { updateSettingsEmailsList } from "./email/email-settings";
 
-export function observeDOMChanges(operations: Function[]) {
+type Operation = () => void;
+
+export function observeDOMChanges(operations: Operation[]) {
   const targetNode = document.body;
-  const config = { childList: true, subtree: true };
+  const config: MutationObserverInit = { childList: true, subtree: true };
 
-  const callback = (mutationsList: any) => {
+  const runOps = () => {
     observer.disconnect();
-
-    for (let mutation of mutationsList) {
-      if (mutation.type === "childList") {
-        operations.forEach((operation) => {
-          try {
-            operation();
-          } catch (error) {
-            console.error("Error executing operation:", error);
-          }
-        });
+    for (const op of operations) {
+      try {
+        op();
+      } catch (error) {
+        console.error("Error executing operation:", error);
       }
     }
-
     observer.observe(targetNode, config);
   };
 
-  const observer = new MutationObserver(callback);
+  const observer = new MutationObserver(runOps);
   observer.observe(targetNode, config);
 }
+
+let storageListenerRegistered = false;
 
 export function checkStorage() {
   chrome.storage.local.get("emails", (data) => {
     if (!data.emails) {
       chrome.storage.local.set({ emails: [] });
-    } else {
-      // Check if emails are already present
-      if (document.querySelector(".email-list")?.children.length === 0) {
-        updateSettingsEmailsList();
-      }
-      // Check if the email popup is already present
-      if (document.querySelector(".email-popup")) {
-        updateEmailList();
-      }
     }
+    syncEmailUI();
   });
+
+  if (!storageListenerRegistered) {
+    storageListenerRegistered = true;
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === "local" && changes.emails) syncEmailUI();
+    });
+  }
+}
+
+function syncEmailUI() {
+  if (document.querySelector(".email-list")) updateSettingsEmailsList();
+  if (document.querySelector(".email-popup")) updateEmailList();
 }
