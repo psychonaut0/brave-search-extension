@@ -1,21 +1,25 @@
 import { emailPopupButton } from "..";
 
-// TODO: pick the right anchor element from startpage's header. The search
-// page and the home page have different shells; the selectors here cover
-// the obvious header containers as a starting point.
+// The right-aligned nav container on home is `.nav-app-promo` (a flex row
+// ending in the hamburger button). The helper sets flex styles on the
+// container and inserts the mail button as the first child, putting it to
+// the left of the hamburger.
+//
+// TODO: confirm the same container shows up on the SERP — startpage's
+// SERP HTML hasn't been inspected yet. If it doesn't, fall back to a
+// broader selector or add a SERP-specific case.
 export function addStartpageMailButton() {
-  const settingsDiv = document.querySelector<HTMLElement>(
-    "header .header-right, .nav-right, #header-right"
-  );
+  const settingsDiv = document.querySelector<HTMLElement>(".nav-app-promo");
   if (!settingsDiv) return;
   emailPopupButton(settingsDiv);
 }
 
 export function startpagePopupPosition(emailPopup: HTMLElement) {
-  // TODO: calibrate against real header height once selectors above are
-  // confirmed.
+  // The header (`#home-top-header`) is absolute-positioned, roughly 64px
+  // tall on home. Anchor under the right edge of the nav, just below the
+  // header bottom edge with a few px breathing room.
   emailPopup.style.top = "60px";
-  emailPopup.style.right = "20px";
+  emailPopup.style.right = "60px";
 }
 
 export function startpagePopupStyle(emailPopup: HTMLElement) {
