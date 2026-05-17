@@ -1,5 +1,5 @@
 import { getProviderHref } from "..";
-import { isBrave, sha256 } from "../../../utils/functions";
+import { getSite, sha256 } from "../../../utils/functions";
 import { htmlButton } from "../../../utils/html-elements";
 import { Email, Provider } from "../../../utils/types";
 import {
@@ -12,6 +12,29 @@ import {
   duckDuckGoPopupPosition,
   duckDuckGoPopupStyle,
 } from "./variants/duckduckgo";
+import {
+  startpageEmailElementStyle,
+  startpagePopupPosition,
+  startpagePopupStyle,
+} from "./variants/startpage";
+
+const popupStyleBySite = {
+  brave: bravePopupStyle,
+  duckduckgo: duckDuckGoPopupStyle,
+  startpage: startpagePopupStyle,
+};
+
+const popupPositionBySite = {
+  brave: bravePopupPosition,
+  duckduckgo: duckDuckGoPopupPosition,
+  startpage: startpagePopupPosition,
+};
+
+const emailElementStyleBySite = {
+  brave: braveEmailElementStyle,
+  duckduckgo: duckDuckGoEmailElementStyle,
+  startpage: startpageEmailElementStyle,
+};
 
 let outsideClickListenerRegistered = false;
 
@@ -98,11 +121,7 @@ async function emailElement(email: Email) {
     emailElement.style.backgroundColor = "transparent";
   };
 
-  if (isBrave()) {
-    braveEmailElementStyle(emailElement, profilePicture);
-  } else {
-    duckDuckGoEmailElementStyle(emailElement, profilePicture);
-  }
+  emailElementStyleBySite[getSite()](emailElement, profilePicture);
 
   return emailElement;
 }
@@ -121,17 +140,9 @@ function showEmailPopup() {
   emailPopup.style.flexDirection = "column";
   emailPopup.style.padding = ".4rem";
   emailPopup.style.minWidth = "350px";
-  if (isBrave()) {
-    bravePopupStyle(emailPopup);
-  } else {
-    duckDuckGoPopupStyle(emailPopup);
-  }
-
-  if (isBrave()) {
-    bravePopupPosition(emailPopup);
-  } else {
-    duckDuckGoPopupPosition(emailPopup);
-  }
+  const site = getSite();
+  popupStyleBySite[site](emailPopup);
+  popupPositionBySite[site](emailPopup);
 
   updateEmailList();
 

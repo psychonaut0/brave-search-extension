@@ -5,17 +5,17 @@
   "{{firefox}}.name": "Brave search mod",
   "{{chrome}}.description": "Customize the Brave Search home page",
   "{{firefox}}.description": "Customize the Brave Search home page",
-  "{{chrome}}.permissions": ["https://search.brave.com/*", "storage"],
-  "{{firefox}}.permissions": ["https://search.brave.com/*", "storage"],
+  "{{chrome}}.permissions": ["https://search.brave.com/*", "https://www.startpage.com/*", "storage"],
+  "{{firefox}}.permissions": ["https://search.brave.com/*", "https://www.startpage.com/*", "storage"],
   "{{chrome}}.content_scripts": [
     {
-      "matches": ["https://search.brave.com/*", "https://duckduckgo.com/*"],
+      "matches": ["https://search.brave.com/*", "https://duckduckgo.com/*", "https://www.startpage.com/*"],
       "js": ["src/content.ts"]
     }
   ],
   "{{firefox}}.content_scripts": [
     {
-      "matches": ["https://search.brave.com/*", "https://duckduckgo.com/*"],
+      "matches": ["https://search.brave.com/*", "https://duckduckgo.com/*", "https://www.startpage.com/*"],
       "js": ["src/content.ts"]
     }
   ],

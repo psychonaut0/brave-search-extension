@@ -1,5 +1,5 @@
 import { emailOptions, isProviderAtLimit } from "..";
-import { isBrave } from "../../../utils/functions";
+import { getSite, isBrave } from "../../../utils/functions";
 import {
   htmlButton,
   htmlInput,
@@ -9,6 +9,13 @@ import { plusIcon } from "../../../utils/icons";
 import { Email, Provider } from "../../../utils/types";
 import { braveEmailElement, braveEmailSettingsHeader } from "./variants/brave";
 import { duckDuckGoEmailElement } from "./variants/duckduckgo";
+import { startpageEmailElement } from "./variants/startpage";
+
+const emailElementBySite = {
+  brave: braveEmailElement,
+  duckduckgo: duckDuckGoEmailElement,
+  startpage: startpageEmailElement,
+};
 
 export function addMailSettings(content: HTMLElement) {
   const sectionElement = content.querySelector("section");
@@ -155,16 +162,8 @@ export function updateSettingsEmailsList() {
       const emails = (data.emails as Email[]) || [];
 
       emails.forEach((email) => {
-        let emailElement: HTMLElement | undefined;
-        if (isBrave()) {
-          emailElement = braveEmailElement(email);
-        } else {
-          emailElement = duckDuckGoEmailElement(email);
-        }
-
-        if (emailElement) {
-          emailListElement.appendChild(emailElement);
-        }
+        const emailElement = emailElementBySite[getSite()](email);
+        if (emailElement) emailListElement.appendChild(emailElement);
       });
     });
   }

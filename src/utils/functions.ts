@@ -8,8 +8,25 @@ export async function sha256(rawData: string | object) {
   return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+export type Site = "brave" | "duckduckgo" | "startpage";
+
+export function getSite(): Site {
+  const host = window.location.hostname;
+  if (host === "search.brave.com") return "brave";
+  if (host === "www.startpage.com" || host === "startpage.com") return "startpage";
+  return "duckduckgo";
+}
+
 export function isBrave() {
-  return window.location.hostname === "search.brave.com";
+  return getSite() === "brave";
+}
+
+export function isStartpage() {
+  return getSite() === "startpage";
+}
+
+export function isDuckDuckGo() {
+  return getSite() === "duckduckgo";
 }
 
 export function removeElementByQuery(query: string) {

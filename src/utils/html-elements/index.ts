@@ -1,4 +1,4 @@
-import { isBrave } from "../functions";
+import { getSite } from "../functions";
 import {
   braveButtonStyle,
   braveInputStyle,
@@ -9,10 +9,48 @@ import {
   duckDuckGoInputStyle,
   duckDuckGoSelectStyle,
 } from "./variants/duckduckgo";
+import {
+  startpageButtonStyle,
+  startpageInputStyle,
+  startpageSelectStyle,
+} from "./variants/startpage";
 
 interface SelectOption {
   value: string;
   label: string;
+}
+
+function styleButton(button: HTMLButtonElement, variant: string) {
+  switch (getSite()) {
+    case "brave":
+      return braveButtonStyle(button, variant);
+    case "startpage":
+      return startpageButtonStyle(button, variant);
+    case "duckduckgo":
+      return duckDuckGoButtonStyle(button);
+  }
+}
+
+function styleInput(input: HTMLInputElement) {
+  switch (getSite()) {
+    case "brave":
+      return braveInputStyle(input);
+    case "startpage":
+      return startpageInputStyle(input);
+    case "duckduckgo":
+      return duckDuckGoInputStyle(input);
+  }
+}
+
+function styleSelect(select: HTMLSelectElement) {
+  switch (getSite()) {
+    case "brave":
+      return braveSelectStyle(select);
+    case "startpage":
+      return startpageSelectStyle(select);
+    case "duckduckgo":
+      return duckDuckGoSelectStyle(select);
+  }
 }
 
 export function htmlButton(
@@ -22,15 +60,8 @@ export function htmlButton(
   action: Function,
   className: string = ""
 ): HTMLButtonElement {
-  // Create the add button
-
   const addButton = document.createElement("button");
-
-  if (isBrave()) {
-    braveButtonStyle(addButton, variant);
-  } else {
-    duckDuckGoButtonStyle(addButton);
-  }
+  styleButton(addButton, variant);
 
   addButton.className = className;
   addButton.style.transition = "background-color 0.2s";
@@ -38,7 +69,6 @@ export function htmlButton(
 
   addButton.addEventListener("click", action as EventListener);
 
-  // Create the icon element
   if (icon !== "") {
     const iconElement = document.createElement("div");
     iconElement.style.display = "flex";
@@ -48,7 +78,6 @@ export function htmlButton(
     addButton.appendChild(iconElement);
   }
 
-  // Create the button content
   if (content !== "") {
     if (icon !== "") {
       const contentElement = document.createElement("div");
@@ -69,23 +98,13 @@ export function htmlInput(
   const inputElement = document.createElement("input");
   inputElement.type = type;
   inputElement.placeholder = placeholder;
-  if (isBrave()) {
-    braveInputStyle(inputElement);
-  } else {
-    duckDuckGoInputStyle(inputElement);
-  }
-
+  styleInput(inputElement);
   return inputElement;
 }
 
 export function htmlSelect(options: SelectOption[]): HTMLSelectElement {
   const selectElement = document.createElement("select");
-
-  if (isBrave()) {
-    braveSelectStyle(selectElement);
-  } else {
-    duckDuckGoSelectStyle(selectElement);
-  }
+  styleSelect(selectElement);
 
   options.forEach((option) => {
     const optionElement = document.createElement("option");
