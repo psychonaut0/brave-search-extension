@@ -26,7 +26,9 @@ This is a **content-script-only** WebExtension that mutates the DOM of `search.b
 `src/manifest.json` uses `{{chrome}}.` / `{{firefox}}.` prefixes consumed by `vite-plugin-web-extension` to emit per-browser manifests at build time. Both targets currently declare `manifest_version: 2`. The plugin also merges `name`, `description`, and `version` from `package.json` (see `generateManifest` in `vite.config.ts`) — bump the version in `package.json`, not the manifest. Target is selected by the `TARGET` env var read in `vite.config.ts` (`TARGET=firefox` → `dist/firefox/`, anything else → `dist/chrome/`).
 
 ### Single entry point branches on host
-`src/content.ts` is the only injected script. It calls `isBrave()` (checks `window.location.hostname === "search.brave.com"`) and runs a different sequence of mutators for each site. Both branches end by registering operations with `observeDOMChanges(...)`.
+`src/content.ts` is the only injected script. It calls `getSite()` (in `utils/functions.ts`) which returns `"brave" | "startpage" | "duckduckgo"`, and dispatches a different sequence of mutators for each. All branches end by registering operations with `observeDOMChanges(...)`.
+
+The **startpage** branch is currently a baseline only — site-agnostic mutators (favicon, title) plus stubbed variants that quietly no-op until the host DOM selectors are confirmed. Each stub has a `TODO` marker at the call site that needs DOM inspection.
 
 ### The mutate-observe-reapply loop
 `components/observer.ts#observeDOMChanges` is the spine of the extension. It:
@@ -38,11 +40,12 @@ The disconnect-during-run pattern is intentional — operations mutate the DOM a
 ### Feature / variant split
 Every feature follows the same shape:
 ```
-components/<feature>/index.ts          # cross-site logic, branches with isBrave()
+components/<feature>/index.ts          # cross-site logic, dispatches on getSite()
 components/<feature>/variants/brave.ts
 components/<feature>/variants/duckduckgo.ts
+components/<feature>/variants/startpage.ts
 ```
-The `index.ts` builds DOM structure and behavior; the `variants/*.ts` files only apply site-specific styling and positioning. The same split exists for the small widget factory in `utils/html-elements/` (button/input/select). **When adding a new injected widget or feature, follow this pattern** — don't inline site-specific styles into shared logic.
+The `index.ts` builds DOM structure and behavior; the `variants/*.ts` files only apply site-specific styling and positioning. The same split exists for the small widget factory in `utils/html-elements/` (button/input/select). **When adding a new injected widget or feature, follow this pattern** — don't inline site-specific styles into shared logic. Dispatch via a small map keyed by `getSite()` rather than chained `if/else` so adding the next engine is a one-line change.
 
 ### Storage-backed email shortcuts
 The only persistent state is a list of `Email` records (`{ email, provider }`) in `chrome.storage.local` under key `"emails"`. `checkStorage()` initializes the key and reconciles the two UI surfaces that read it (the popup in `email/email-popup` and the settings list in `email/email-settings`); it is re-run on every mutation tick. `email-settings/index.ts` also listens to `chrome.storage.onChanged` to refresh the list when edits happen.

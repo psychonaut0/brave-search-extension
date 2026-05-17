@@ -23,7 +23,11 @@ export default defineConfig({
     webExtension({
       browser: target,
       webExtConfig: {
-        startUrl: ["https://search.brave.com/", "https://duckduckgo.com/"],
+        startUrl: [
+          "https://search.brave.com/",
+          "https://duckduckgo.com/",
+          "https://www.startpage.com/",
+        ],
         chromiumBinary: "/usr/bin/brave",
       },
       manifest: generateManifest,
