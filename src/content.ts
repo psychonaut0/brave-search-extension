@@ -100,5 +100,5 @@ if (site === "brave") {
   ];
 
   runAll(ddgOps);
-  observeDOMChanges([checkStorage, addDuckDuckNewSettings]);
+  observeDOMChanges([applyGoogleTheme, checkStorage, addDuckDuckNewSettings]);
 }

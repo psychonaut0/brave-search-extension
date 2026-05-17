@@ -92,4 +92,90 @@ export const startpageGoogleCSS = `
   .anonymous-view-link {
     display: none !important;
   }
+
+  /* ---------- SERP header chrome ---------- */
+  /* On the SERP, Startpage wraps logo + search bar + tabs in a top <header>.
+     Force the same dark background as the body so the header doesn't sit
+     in its own off-color band. */
+  body > header,
+  .header-inner-container,
+  .mobile-nav,
+  .top-nav-container {
+    background: ${c.bg} !important;
+  }
+  body > header {
+    border-bottom: 1px solid ${c.cardBorder} !important;
+  }
+
+  /* Category tabs (All / Images / Videos / News / Shopping / Maps).
+     Match Google's underlined tab style. */
+  .inline-nav {
+    background: ${c.bg} !important;
+    border-bottom: 1px solid ${c.cardBorder} !important;
+  }
+  .inline-nav .categories {
+    display: flex !important;
+  }
+  .inline-nav .vertical-link-container {
+    padding: 0 !important;
+  }
+  .inline-nav .header-nav-item-button {
+    padding: 0 12px !important;
+    background: transparent !important;
+  }
+  .inline-nav .header-nav-item {
+    min-height: 48px !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    padding-bottom: 8px !important;
+    border-bottom: 3px solid transparent !important;
+  }
+  .inline-nav .header-nav-item-text {
+    font-family: ${f.display} !important;
+    font-size: ${s.sitePx}px !important;
+    font-weight: 500 !important;
+    color: #80868b !important;
+    text-transform: none !important;
+  }
+  .inline-nav .header-nav-item:hover .header-nav-item-text {
+    color: ${c.text} !important;
+  }
+
+  /* Google has no "Private Search" affordance — hide Startpage's pill. */
+  .private-search-dropdown {
+    display: none !important;
+  }
+
+  /* ---------- Search-suggestion dropdown ---------- */
+  /* The suggestions render inside .search-form-container as a list of
+     .search-suggestion rows. Match Google's autocomplete dropdown look. */
+  .suggested-search-container {
+    background: ${c.searchBarBgFocused} !important;
+    border-radius: 0 0 ${s.searchBarRadiusPx}px ${s.searchBarRadiusPx}px !important;
+    box-shadow: 0 4px 12px rgba(23, 23, 23, .9) !important;
+  }
+  .search-suggestion {
+    background: transparent !important;
+    padding: 8px 16px !important;
+  }
+  .search-suggestion p {
+    font-family: ${f.display} !important;
+    font-size: ${s.inputPx}px !important;
+    color: ${c.text} !important;
+    margin: 0 !important;
+  }
+  .search-suggestion:hover,
+  .search-suggestion[aria-selected="true"] {
+    background: ${c.cardBorder} !important;
+  }
+
+  /* ---------- Body font ---------- */
+  /* Default to Arial across the page so non-result chrome matches the
+     Google body typography. */
+  body {
+    font-family: ${f.body} !important;
+  }
+  h1, h2, h3, h4 {
+    font-family: ${f.display} !important;
+  }
 `;
