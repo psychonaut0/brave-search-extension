@@ -21,6 +21,7 @@ import { addBraveNewSettingsSidePanel } from "./components/email/email-settings/
 import { addDuckDuckNewSettings } from "./components/email/email-settings/variants/duckduckgo";
 import { addStartpageNewSettings } from "./components/email/email-settings/variants/startpage";
 import { addCssColorVariables } from "./components/stylesheets";
+import { applyGoogleTheme } from "./components/google-theme";
 import {
   getSite,
   removeElementByQuery,
@@ -42,6 +43,7 @@ const site = getSite();
 if (site === "brave") {
   const braveOps: Array<() => void> = [
     addCssColorVariables,
+    applyGoogleTheme,
     removeElementByQuery.bind(null, ".subutton-wrapper"),
     removeElementByQuery.bind(null, "footer"),
     replaceBraveToGoogleLogo,
@@ -72,6 +74,7 @@ if (site === "brave") {
   // button, settings panel) are wired here but live behind TODO markers
   // until the host DOM has been inspected and selectors confirmed.
   const startpageOps: Array<() => void> = [
+    applyGoogleTheme,
     replaceFavicon,
     changeStartpageTitle,
     replaceStartpageToGoogleLogo,
@@ -84,6 +87,7 @@ if (site === "brave") {
   observeDOMChanges(startpageOps);
 } else {
   const ddgOps: Array<() => void> = [
+    applyGoogleTheme,
     replaceDuckDuckGoToGoogleLogo,
     removeElementByQuery.bind(null, "#features"),
     removeElementByQuery.bind(null, ".homepage-cta-section_scrollCta__HuSCL"),
@@ -96,5 +100,5 @@ if (site === "brave") {
   ];
 
   runAll(ddgOps);
-  observeDOMChanges([checkStorage, addDuckDuckNewSettings]);
+  observeDOMChanges([applyGoogleTheme, checkStorage, addDuckDuckNewSettings]);
 }
