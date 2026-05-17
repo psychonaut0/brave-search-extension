@@ -13,7 +13,7 @@ export type Site = "brave" | "duckduckgo" | "startpage";
 export function getSite(): Site {
   const host = window.location.hostname;
   if (host === "search.brave.com") return "brave";
-  if (host === "www.startpage.com" || host === "startpage.com") return "startpage";
+  if (host === "startpage.com" || host.endsWith(".startpage.com")) return "startpage";
   return "duckduckgo";
 }
 
