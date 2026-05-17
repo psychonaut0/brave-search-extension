@@ -7,7 +7,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Package manager is **bun** (matches CI). `vite.config.ts` is loaded as ESM — keep imports ESM, no `require()`.
 
 - `bun install` — install deps
-- `bun run dev` — runs Vite via `vite-plugin-web-extension`. The plugin loads the extension into Brave (`chromiumBinary: /usr/bin/brave` in `vite.config.ts`) and auto-opens `search.brave.com` and `duckduckgo.com`. Hardcoded Linux path; edit `vite.config.ts` on other OSes.
+
+### Dev (live)
+
+Two flavours. Pick by whether you want a throwaway browser or your real one.
+
+- `bun run dev` — launches a fresh Brave (`chromiumBinary: /usr/bin/brave` in `vite.config.ts`, hardcoded Linux path — edit it on other OSes) with the extension loaded, auto-opens all three target sites, and rebuilds on save. The launched browser has a clean profile (none of your normal extensions/cookies).
+- `bun run dev:firefox` — same, but launches Firefox.
+- `bun run dev:watch` — rebuilds `dist/chrome/` on every save **without launching any browser**. Load `dist/chrome` unpacked into your real Brave once (`brave://extensions` → Developer mode → Load unpacked), then click reload on the extension as needed. The plugin injects a `http://localhost/*` permission + dev CSP into the manifest so the content script can pull updates from the vite dev server.
+- `bun run dev:watch:firefox` — same, Firefox manifest variant.
+
+Two env vars drive the mode in `vite.config.ts`: `TARGET=firefox` picks the Firefox manifest + output dir; `NO_LAUNCH=1` sets `disableAutoLaunch` on the plugin.
+
+### Build
+
 - `bun run build` — runs `tsc` (type-check only, `noEmit: true`) then `vite build` for the **Chromium** target. Output goes to `dist/chrome/`. Type errors fail the build.
 - `bun run build:firefox` — same flow, but with `TARGET=firefox` set so the plugin picks the `{{firefox}}.` manifest entries. Output goes to `dist/firefox/`.
 - `bun run build:all` — runs both. CI uses this.

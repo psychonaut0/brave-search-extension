@@ -13,6 +13,7 @@ function generateManifest() {
 }
 
 const target = process.env.TARGET === "firefox" ? "firefox" : "chrome";
+const disableAutoLaunch = process.env.NO_LAUNCH === "1";
 
 export default defineConfig({
   build: {
@@ -22,6 +23,7 @@ export default defineConfig({
   plugins: [
     webExtension({
       browser: target,
+      disableAutoLaunch,
       webExtConfig: {
         startUrl: [
           "https://search.brave.com/",

@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:firefox": "TARGET=firefox vite",
+    "dev:watch": "NO_LAUNCH=1 vite",
+    "dev:watch:firefox": "TARGET=firefox NO_LAUNCH=1 vite",
     "build": "tsc && vite build",
     "build:firefox": "tsc && TARGET=firefox vite build",
     "build:all": "bun run build && bun run build:firefox"
