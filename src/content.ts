@@ -40,9 +40,8 @@ function runAll(ops: Array<() => void>) {
 const site = getSite();
 
 if (site === "brave") {
-  addCssColorVariables();
-
   const braveOps: Array<() => void> = [
+    addCssColorVariables,
     removeElementByQuery.bind(null, ".subutton-wrapper"),
     removeElementByQuery.bind(null, "footer"),
     replaceBraveToGoogleLogo,
