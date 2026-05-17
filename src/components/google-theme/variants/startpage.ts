@@ -123,11 +123,11 @@ export const startpageGoogleCSS = `
     background: transparent !important;
     padding: 0 12px !important;
   }
+  /* Keep tabs at Startpage's native height — making them taller pushes the
+     header past its hardcoded 118px offset and crops the filter row below. */
   .inline-nav .header-nav-item {
-    min-height: 48px !important;
     display: flex !important;
     align-items: flex-end !important;
-    padding-bottom: 8px !important;
     border-bottom: 3px solid transparent !important;
   }
   .inline-nav .header-nav-item-text {
@@ -150,7 +150,13 @@ export const startpageGoogleCSS = `
     border-bottom-color: ${c.link} !important;
   }
 
-  /* Filters row */
+  /* Filters row — Startpage ships a hardcoded padding-top: 118px to clear
+     the fixed header. Bump it a touch to absorb any drift from our overrides. */
+  @media (min-width: 990px) {
+    #filters-container {
+      padding-top: 132px !important;
+    }
+  }
   .privacy-indicator-button,
   .privacy-indicator-content,
   .privacy-indicator-text {
